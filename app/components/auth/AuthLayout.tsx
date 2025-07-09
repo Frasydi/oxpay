@@ -11,7 +11,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
     <Box sx={{ 
       height: '100vh', 
       display: 'flex',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%)',
+      background: 'white',
       fontFamily: '"Open Sans", sans-serif',
       overflow: 'hidden',
       transition: 'all 0.3s ease'
@@ -22,8 +22,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(10px)',
+        bgcolor: '#FFFFFF',
         p: 4,
         overflow: 'auto',
         height: '100vh',
@@ -42,7 +41,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
       {/* Visual Branding Section - Right Side */}
       <Box sx={{ 
         flex: 1,
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(180deg, #FFFFFF 0%, #E5CCF7 100%)',
         color: 'white', 
         display: { xs: 'none', md: 'flex' },
         flexDirection: 'column', 
