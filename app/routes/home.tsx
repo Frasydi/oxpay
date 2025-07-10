@@ -1,13 +1,13 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import LoadingPage from "../components/common/LoadingPage";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "OX PAY - Secure Payment Solutions" },
+    { name: "description", content: "Secure payment solutions for modern businesses" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return <LoadingPage />;
 }

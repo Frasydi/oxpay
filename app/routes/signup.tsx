@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { 
   Box, 
   Typography, 
@@ -14,10 +13,8 @@ import {
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';
 import AuthButton from '~/components/auth/AuthButton';
-import ProtectedRoute from '~/components/auth/ProtectedRoute';
 
 const SignUp = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,8 +60,8 @@ const SignUp = () => {
       const response = await authService.signUp(email, password);
       console.log('Sign up successful:', response);
       
-      // Navigate to verify email page with the user's email using React Router
-      navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+      // Navigate to verify email page with the user's email
+      window.location.href = `/verify-email?email=${encodeURIComponent(email)}`;
       
     } catch (error: any) {
       setError(error.message || 'Sign up failed');
@@ -73,40 +70,17 @@ const SignUp = () => {
     }
   };
 
-  const handleGoogleSignUp = async () => {
+  const handleSocialSignUp = async (signUpMethod: () => Promise<any>) => {
     setLoading(true);
+    setError('');
     try {
-      const response = await authService.loginWithGoogle();
-      console.log('Google sign up successful:', response);
-      navigate('/dashboard');
+      const response = await signUpMethod();
+      if (response.success && response.user) {
+        // Since this sets localStorage, the auth context will pick it up
+        window.location.reload();
+      }
     } catch (error: any) {
-      setError(error.message || 'Google sign up failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSingPassSignUp = async () => {
-    setLoading(true);
-    try {
-      const response = await authService.loginWithSingPass();
-      console.log('SingPass sign up successful:', response);
-      navigate('/dashboard');
-    } catch (error: any) {
-      setError(error.message || 'SingPass sign up failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCorPassSignUp = async () => {
-    setLoading(true);
-    try {
-      const response = await authService.loginWithCorPass();
-      console.log('CorPass sign up successful:', response);
-      navigate('/dashboard');
-    } catch (error: any) {
-      setError(error.message || 'CorPass sign up failed');
+      setError(error.message || 'Sign up failed');
     } finally {
       setLoading(false);
     }
@@ -139,7 +113,8 @@ const SignUp = () => {
           variant="outlined"
           fullWidth
           startIcon={<GoogleIcon />}
-          onClick={handleGoogleSignUp}
+          onClick={() => handleSocialSignUp(authService.loginWithGoogle)}
+          disabled={loading}
           sx={{
             py: 1,
             borderRadius: 6,
@@ -163,7 +138,8 @@ const SignUp = () => {
           variant="outlined"
           fullWidth
           startIcon={<SingPassIcon />}
-          onClick={handleSingPassSignUp}
+          onClick={() => handleSocialSignUp(authService.loginWithSingPass)}
+          disabled={loading}
           sx={{
             py: 1,
             borderRadius: 6,
@@ -187,7 +163,8 @@ const SignUp = () => {
           variant="outlined"
           fullWidth
           startIcon={<CorPassIcon />}
-          onClick={handleCorPassSignUp}
+          onClick={() => handleSocialSignUp(authService.loginWithCorPass)}
+          disabled={loading}
           sx={{
             py: 1,
             borderRadius: 6,
@@ -295,12 +272,4 @@ const SignUp = () => {
   );
 };
 
-const ProtectedSignUp = () => {
-  return (
-    <ProtectedRoute requireAuth={false}>
-      <SignUp />
-    </ProtectedRoute>
-  );
-};
-
-export default ProtectedSignUp;
+export default SignUp;

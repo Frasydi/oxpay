@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { 
   Box, 
   Typography, 
@@ -11,14 +10,12 @@ import {
   Fade
 } from '@mui/material';
 import { Logout, UserEdit, Shield, TickCircle, User, Sms, SecurityUser, MoneyChange } from 'iconsax-react';
-import authService from '~/services/AuthService';
-import ProtectedRoute from '~/components/auth/ProtectedRoute';
+import { useAuth } from '~/contexts/AuthContext';
 import DashboardLayout from '~/components/dashboard/DashboardLayout';
 import PillTabs from '~/components/dashboard/PillTabs';
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
-  const user = authService.getCurrentUser();
+  const { user, logout } = useAuth();
   const [selectedTab, setSelectedTab] = useState(0);
 
   // Progress data
@@ -86,8 +83,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleLogout = () => {
-    authService.logout();
-    navigate('/login');
+    logout();
   };
 
   return (
@@ -342,121 +338,420 @@ const Dashboard: React.FC = () => {
               <Fade in={selectedTab === 0} timeout={500}>
                 <Box sx={{ display: selectedTab === 0 ? 'block' : 'none' }}>
                   <Box sx={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
+                    display: 'flex', 
+                    flexDirection: 'column',
                     gap: 4 
                   }}>
-                    {/* In Store Payment Terminal Card */}
+                    {/* First Row - In Store and Virtual Payment Terminals */}
+                    <Box sx={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
+                      gap: 4 
+                    }}>
+                      {/* In Store Payment Terminal Card */}
+                      <Card sx={{ 
+                        p: 4,
+                        borderRadius: '14px',
+                        bgcolor: 'white',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'translateY(-2px)'
+                        }
+                      }}>
+                        <Typography variant="h5" sx={{ 
+                          fontWeight: 'bold', 
+                          color: '#1f2937',
+                          mb: 2,
+                          fontSize: '1.5rem',
+                          textAlign: 'left'
+                        }}>
+                          In Store Payment Terminal
+                        </Typography>
+                        <Typography variant="body1" sx={{ 
+                          color: '#6b7280',
+                          fontSize: '1rem',
+                          mb: 3,
+                          lineHeight: 1.6,
+                          textAlign: 'left'
+                        }}>
+                          Download now from the App Store or Google Play and simplify your financial life.
+                        </Typography>
+                        <Box>
+
+
+
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: '#8b5cf6',
+                            color: 'white',
+                            borderRadius: '25px',
+                            py: 1,
+                            px: 3,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            boxShadow: 'none',
+                            '&:hover': {
+                              backgroundColor: '#7c3aed',
+                              boxShadow: 'none'
+                            }
+                          }}
+                        >
+                          Contact Sales
+                        </Button>
+                        
+                      </Card>
+
+                      {/* Virtual Payment Terminal Card */}
+                      <Card sx={{ 
+                        p: 4,
+                        borderRadius: '14px',
+                        bgcolor: 'white',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'translateY(-2px)'
+                        }
+                      }}>
+                        <Typography variant="h5" sx={{ 
+                          fontWeight: 'bold', 
+                          color: '#1f2937',
+                          mb: 2,
+                          fontSize: '1.5rem',
+                          textAlign: 'left'
+                        }}>
+                          Virtual Payment Terminal
+                        </Typography>
+                        <Typography variant="body1" sx={{ 
+                          color: '#6b7280',
+                          fontSize: '1rem',
+                          mb: 3,
+                          lineHeight: 1.6,
+                          textAlign: 'left'
+                        }}>
+                          Download now from the App Store or Google Play and simplify your financial life.
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                          <Box
+                            component="img"
+                            src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                            alt="Get it on Google Play"
+                            sx={{
+                              height: 40,
+                              cursor: 'pointer',
+                              '&:hover': {
+                                opacity: 0.8
+                              }
+                            }}
+                          />
+                          <Box
+                            component="img"
+                            src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                            alt="Download on App Store"
+                            sx={{
+                              height: 40,
+                              cursor: 'pointer',
+                              '&:hover': {
+                                opacity: 0.8
+                              }
+                            }}
+                          />
+                        </Box>
+                      </Card>
+                    </Box>
+
+                    {/* Store 1 - Odd Layout (Image + Text) */}
                     <Card sx={{ 
-                      p: 3,
-                      border: '1px solid #DBDBE1',
+                      p: 4,
                       borderRadius: '14px',
-                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                       bgcolor: 'white',
                       transition: 'all 0.3s ease',
-                      textAlign: 'left',
+                      width: '100%',
                       '&:hover': {
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                        transform: 'translateY(-2px)'
                       }
                     }}>
-                      <Typography variant="h5" sx={{ 
-                        fontWeight: 'bold', 
-                        color: '#1f2937',
-                        mb: 2,
-                        fontSize: '1.5rem',
-                        textAlign: 'left'
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 4,
+                        flexDirection: { xs: 'column', md: 'row' }
                       }}>
-                        In Store Payment Terminal
-                      </Typography>
-                      <Typography variant="body1" sx={{ 
-                        color: '#6b7280',
-                        fontSize: '1rem',
-                        mb: 3,
-                        lineHeight: 1.6,
-                        textAlign: 'left'
-                      }}>
-                        Download now from the App Store or Google Play and simplify your financial life.
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: '#8b5cf6',
-                          color: 'white',
-                          borderRadius: '25px',
-                          py: 1,
-                          px: 3,
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          boxShadow: 'none',
-                          alignSelf: 'flex-start',
-                          '&:hover': {
-                            backgroundColor: '#7c3aed',
-                            boxShadow: 'none'
-                          }
-                        }}
-                      >
-                        Contact Sales
-                      </Button>
+                        {/* Image */}
+                        <Box sx={{ 
+                          minWidth: { xs: '100%', md: '300px' },
+                          maxWidth: { xs: '100%', md: '300px' },
+                          height: '300px',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          bgcolor: '#f8fafc',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <Box
+                            component="img"
+                            src="/store1.png"
+                            alt="Oxpay Merchant App"
+                            sx={{
+                              maxWidth: '100%',
+                              maxHeight: '100%',
+                              width: 'auto',
+                              height: 'auto',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        </Box>
+                        
+                        {/* Text Content */}
+                        <Box sx={{ flex: 1, textAlign: 'left' }}>
+                          <Typography variant="h5" sx={{ 
+                            fontWeight: 'bold', 
+                            color: '#1f2937',
+                            mb: 2,
+                            fontSize: '1.5rem'
+                          }}>
+                            Oxpay Merchant App – Power in Your Pocket
+                          </Typography>
+                          <Typography variant="body1" sx={{ 
+                            color: '#6b7280',
+                            fontSize: '1rem',
+                            mb: 3,
+                            lineHeight: 1.6
+                          }}>
+                            All-in-one payments. Zero complications. From in-store terminals to your mobile device, the Oxpay app lets you:
+                            <Box component="ul" sx={{ listStyle: 'none', pl: 0, mt: 2, mb: 2 }}>
+                              {[
+                                'Accept payments',
+                                'Issue refunds', 
+                                'Send receipts',
+                                'Create payment links',
+                                'Track every transaction in real-time'
+                              ].map((feature, index) => (
+                                <Box component="li" key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                                  <Box sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    border: '2px solid #10b981',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 2,
+                                    flexShrink: 0
+                                  }}>
+                                    <svg
+                                      width="10"
+                                      height="8"
+                                      viewBox="0 0 10 8"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M1 4L3.5 6.5L9 1.5"
+                                        stroke="#10b981"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                    </svg>
+                                  </Box>
+                                  <Typography sx={{ color: '#6b7280', fontSize: '1rem' }}>
+                                    {feature}
+                                  </Typography>
+                                </Box>
+                              ))}
+                            </Box>
+                            Everything you need to manage payments, now in your pocket. Download and transform your business today!
+                          </Typography>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              backgroundColor: '#8b5cf6',
+                              color: 'white',
+                              borderRadius: '25px',
+                              py: 1,
+                              px: 3,
+                              textTransform: 'none',
+                              fontWeight: 600,
+                              boxShadow: 'none',
+                              '&:hover': {
+                                backgroundColor: '#7c3aed',
+                                boxShadow: 'none'
+                              }
+                            }}
+                          >
+                            Download App
+                          </Button>
+                        </Box>
+                      </Box>
                     </Card>
 
-                    {/* Virtual Payment Terminal Card */}
+                    {/* Store 2 - Even Layout (Text + Image) */}
                     <Card sx={{ 
-                      p: 3,
-                      border: '1px solid #DBDBE1',
+                      p: 4,
                       borderRadius: '14px',
-                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                       bgcolor: 'white',
                       transition: 'all 0.3s ease',
-                      textAlign: 'left',
+                      width: '100%',
                       '&:hover': {
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                        transform: 'translateY(-2px)'
                       }
                     }}>
-                      <Typography variant="h5" sx={{ 
-                        fontWeight: 'bold', 
-                        color: '#1f2937',
-                        mb: 2,
-                        fontSize: '1.5rem',
-                        textAlign: 'left'
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 4,
+                        flexDirection: { xs: 'column', md: 'row' }
                       }}>
-                        Virtual Payment Terminal
-                      </Typography>
-                      <Typography variant="body1" sx={{ 
-                        color: '#6b7280',
-                        fontSize: '1rem',
-                        mb: 3,
-                        lineHeight: 1.6,
-                        textAlign: 'left'
+                        {/* Text Content */}
+                        <Box sx={{ flex: 1, textAlign: 'left', order: { xs: 2, md: 1 } }}>
+                          <Typography variant="h5" sx={{ 
+                            fontWeight: 'bold', 
+                            color: '#1f2937',
+                            mb: 2,
+                            fontSize: '1.5rem'
+                          }}>
+                            Create Payment Links
+                          </Typography>
+                          <Typography variant="body1" sx={{ 
+                            color: '#6b7280',
+                            fontSize: '1rem',
+                            mb: 3,
+                            lineHeight: 1.6
+                          }}>
+                            Send. Click. Paid. It's that simple. Generate secure payment URLs with just a few taps, no coding required.
+                          </Typography>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              backgroundColor: '#8b5cf6',
+                              color: 'white',
+                              borderRadius: '25px',
+                              py: 1,
+                              px: 3,
+                              textTransform: 'none',
+                              fontWeight: 600,
+                              boxShadow: 'none',
+                              '&:hover': {
+                                backgroundColor: '#7c3aed',
+                                boxShadow: 'none'
+                              }
+                            }}
+                          >
+                            Get Started
+                          </Button>
+                        </Box>
+                        
+                        {/* Image */}
+                        <Box sx={{ 
+                          minWidth: { xs: '100%', md: '300px' },
+                          maxWidth: { xs: '100%', md: '300px' },
+                          height: '300px',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          bgcolor: '#f8fafc',
+                          order: { xs: 1, md: 2 },
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <Box
+                            component="img"
+                            src="/store2.png"
+                            alt="Create Payment Links"
+                            sx={{
+                              maxWidth: '100%',
+                              maxHeight: '100%',
+                              width: 'auto',
+                              height: 'auto',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                    </Card>
+
+                    {/* Store 3 - Odd Layout (Image + Text) */}
+                    <Card sx={{ 
+                      p: 4,
+                      borderRadius: '14px',
+                      bgcolor: 'white',
+                      transition: 'all 0.3s ease',
+                      width: '100%',
+                      '&:hover': {
+                        transform: 'translateY(-2px)'
+                      }
+                    }}>
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 4,
+                        flexDirection: { xs: 'column', md: 'row' }
                       }}>
-                        Download now from the App Store or Google Play and simplify your financial life.
-                      </Typography>
-                      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-                        <Box
-                          component="img"
-                          src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                          alt="Get it on Google Play"
-                          sx={{
-                            height: 40,
-                            cursor: 'pointer',
-                            '&:hover': {
-                              opacity: 0.8
-                            }
-                          }}
-                        />
-                        <Box
-                          component="img"
-                          src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-                          alt="Download on App Store"
-                          sx={{
-                            height: 40,
-                            cursor: 'pointer',
-                            '&:hover': {
-                              opacity: 0.8
-                            }
-                          }}
-                        />
+                        {/* Image */}
+                        <Box sx={{ 
+                          minWidth: { xs: '100%', md: '300px' },
+                          maxWidth: { xs: '100%', md: '300px' },
+                          height: '300px',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          bgcolor: '#f8fafc',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <Box
+                            component="img"
+                            src="/store3.png"
+                            alt="Send Receipt via Email"
+                            sx={{
+                              maxWidth: '100%',
+                              maxHeight: '100%',
+                              width: 'auto',
+                              height: 'auto',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        </Box>
+                        
+                        {/* Text Content */}
+                        <Box sx={{ flex: 1, textAlign: 'left' }}>
+                          <Typography variant="h5" sx={{ 
+                            fontWeight: 'bold', 
+                            color: '#1f2937',
+                            mb: 2,
+                            fontSize: '1.5rem'
+                          }}>
+                            Send Receipt via Email
+                          </Typography>
+                          <Typography variant="body1" sx={{ 
+                            color: '#6b7280',
+                            fontSize: '1rem',
+                            mb: 3,
+                            lineHeight: 1.6
+                          }}>
+                            Go Green. Save on paper. Stay connected. Automatically email receipts to customers or internal teams in seconds. Add multiple recipients, CC support, and share receipts without wasting paper.
+                          </Typography>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              backgroundColor: '#8b5cf6',
+                              color: 'white',
+                              borderRadius: '25px',
+                              py: 1,
+                              px: 3,
+                              textTransform: 'none',
+                              fontWeight: 600,
+                              boxShadow: 'none',
+                              '&:hover': {
+                                backgroundColor: '#7c3aed',
+                                boxShadow: 'none'
+                              }
+                            }}
+                          >
+                            Learn More
+                          </Button>
+                        </Box>
                       </Box>
                     </Card>
                   </Box>
@@ -474,15 +769,12 @@ const Dashboard: React.FC = () => {
                     {/* Payment Gateway API Card */}
                     <Card sx={{ 
                       p: 4,
-                      border: '1px solid #DBDBE1',
                       borderRadius: '14px',
-                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                       bgcolor: 'white',
                       transition: 'all 0.3s ease',
                       textAlign: 'left',
                       '&:hover': {
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                        transform: 'translateY(-2px)'
                       }
                     }}>
                       <Typography variant="h5" sx={{ 
@@ -528,15 +820,12 @@ const Dashboard: React.FC = () => {
                     {/* E-commerce Plugins Card */}
                     <Card sx={{ 
                       p: 4,
-                      border: '1px solid #DBDBE1',
                       borderRadius: '14px',
-                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                       bgcolor: 'white',
                       transition: 'all 0.3s ease',
                       textAlign: 'left',
                       '&:hover': {
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                        transform: 'translateY(-2px)'
                       }
                     }}>
                       <Typography variant="h5" sx={{ 
@@ -589,12 +878,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-const ProtectedDashboard = () => {
-  return (
-    <ProtectedRoute requireAuth={true}>
-      <Dashboard />
-    </ProtectedRoute>
-  );
-};
-
-export default ProtectedDashboard;
+export default Dashboard;

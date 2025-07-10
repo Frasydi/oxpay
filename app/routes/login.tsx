@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { 
   Box, 
   Typography, 
@@ -11,13 +10,13 @@ import {
   Alert,
   CircularProgress
 } from '@mui/material';
+import { useAuth } from '~/contexts/AuthContext';
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';
 import AuthButton from '~/components/auth/AuthButton';
-import ProtectedRoute from '~/components/auth/ProtectedRoute';
 
 const Login = () => {
-  const navigate = useNavigate();
+  const { login, socialLogin } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -59,10 +58,8 @@ const Login = () => {
     setError('');
     
     try {
-      const response = await authService.login(email, password);
-      console.log('Login successful:', response);
-      // Redirect to dashboard after successful login
-      navigate('/dashboard');
+      await login(email, password);
+      // The login function from AuthContext will handle the redirect
     } catch (error: any) {
       setError(error.message || 'Login failed');
     } finally {
@@ -70,40 +67,14 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleSocialLogin = async (loginMethod: () => Promise<any>) => {
     setLoading(true);
+    setError('');
     try {
-      const response = await authService.loginWithGoogle();
-      console.log('Google login successful:', response);
-      navigate('/dashboard');
+      await socialLogin(loginMethod);
+      // The socialLogin function from AuthContext will handle the redirect
     } catch (error: any) {
-      setError(error.message || 'Google login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSingPassLogin = async () => {
-    setLoading(true);
-    try {
-      const response = await authService.loginWithSingPass();
-      console.log('SingPass login successful:', response);
-      navigate('/dashboard');
-    } catch (error: any) {
-      setError(error.message || 'SingPass login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCorPassLogin = async () => {
-    setLoading(true);
-    try {
-      const response = await authService.loginWithCorPass();
-      console.log('CorPass login successful:', response);
-      navigate('/dashboard');
-    } catch (error: any) {
-      setError(error.message || 'CorPass login failed');
+      setError(error.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -136,7 +107,7 @@ const Login = () => {
           variant="outlined"
           fullWidth
           startIcon={<GoogleIcon />}
-          onClick={handleGoogleLogin}
+          onClick={() => handleSocialLogin(authService.loginWithGoogle)}
           sx={{
             py: 1,
             borderRadius: 6,
@@ -160,7 +131,7 @@ const Login = () => {
           variant="outlined"
           fullWidth
           startIcon={<SingPassIcon />}
-          onClick={handleSingPassLogin}
+          onClick={() => handleSocialLogin(authService.loginWithSingPass)}
           sx={{
             py: 1,
             borderRadius: 6,
@@ -184,7 +155,7 @@ const Login = () => {
           variant="outlined"
           fullWidth
           startIcon={<CorPassIcon />}
-          onClick={handleCorPassLogin}
+          onClick={() => handleSocialLogin(authService.loginWithCorPass)}
           sx={{
             py: 1,
             borderRadius: 6,
@@ -307,12 +278,4 @@ const Login = () => {
   );
 };
 
-const ProtectedLogin = () => {
-  return (
-    <ProtectedRoute requireAuth={false}>
-      <Login />
-    </ProtectedRoute>
-  );
-};
-
-export default ProtectedLogin;
+export default Login;

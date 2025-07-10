@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import AuthLayout from './AuthLayout';
 import AuthButton from './AuthButton';
+import { useAuth } from '~/contexts/AuthContext';
 import authService from '../../services/AuthService';
 
 const Login = () => {
@@ -19,6 +20,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { login } = useAuth();
 
   // Custom colored icons
   const GoogleIcon = () => (
@@ -57,10 +59,8 @@ const Login = () => {
     setError('');
     
     try {
-      const response = await authService.login(email, password);
-      console.log('Login successful:', response);
-      // Redirect or handle successful login
-      alert('Login successful!');
+      await login(email, password);
+      // Login function from context will handle the redirect
     } catch (error: any) {
       setError(error.message || 'Login failed');
     } finally {

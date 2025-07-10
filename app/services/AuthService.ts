@@ -30,136 +30,129 @@ class AuthService {
 
   // Login method
   async login(email: string, password: string): Promise<AuthResponse> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const user = this.users.find((u: StoredUser) => u.email === email && u.password === password);
-        if (user) {
-          const token = this.generateToken(user);
-          const userData = { id: user.id, email: user.email };
-          localStorage.setItem('authToken', token);
-          localStorage.setItem('user', JSON.stringify(userData));
-          resolve({
-            success: true,
-            user: userData,
-            token
-          });
-        } else {
-          reject({
-            success: false,
-            message: 'Invalid email or password'
-          });
-        }
-      }, 1000);
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const user = this.users.find((u: StoredUser) => u.email === email && u.password === password);
+    if (user) {
+      const token = this.generateToken(user);
+      const userData = { id: user.id, email: user.email };
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return {
+        success: true,
+        user: userData,
+        token
+      };
+    } else {
+      throw {
+        success: false,
+        message: 'Invalid email or password'
+      };
+    }
   }
 
   // Sign up method
   async signUp(email: string, password: string): Promise<AuthResponse> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const existingUser = this.users.find((u: StoredUser) => u.email === email);
-        if (existingUser) {
-          reject({
-            success: false,
-            message: 'User already exists'
-          });
-        } else {
-          const newUser: StoredUser = {
-            id: this.users.length + 1,
-            email,
-            password
-          };
-          this.users.push(newUser);
-          // Don't auto-login on signup, user needs to verify email first
-          resolve({
-            success: true,
-            user: { id: newUser.id, email: newUser.email },
-            message: 'Account created successfully. Please verify your email.'
-          });
-        }
-      }, 1000);
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const existingUser = this.users.find((u: StoredUser) => u.email === email);
+    if (existingUser) {
+      throw {
+        success: false,
+        message: 'User already exists'
+      };
+    } else {
+      const newUser: StoredUser = {
+        id: this.users.length + 1,
+        email,
+        password
+      };
+      this.users.push(newUser);
+      // Don't auto-login on signup, user needs to verify email first
+      return {
+        success: true,
+        user: { id: newUser.id, email: newUser.email },
+        message: 'Account created successfully. Please verify your email.'
+      };
+    }
   }
 
   // Social login methods
-  async loginWithGoogle(): Promise<AuthResponse> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const user = { id: 999, email: 'google@example.com' };
-        const token = this.generateToken(user);
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        resolve({
-          success: true,
-          user,
-          token
-        });
-      }, 1000);
-    });
+  loginWithGoogle = async (): Promise<AuthResponse> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const user = { id: 999, email: 'google@example.com' };
+    const token = this.generateToken(user);
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    return {
+      success: true,
+      user,
+      token
+    };
   }
 
-  async loginWithGitHub(): Promise<AuthResponse> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const user = { id: 998, email: 'github@example.com' };
-        const token = this.generateToken(user);
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        resolve({
-          success: true,
-          user,
-          token
-        });
-      }, 1000);
-    });
+  loginWithGitHub = async (): Promise<AuthResponse> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const user = { id: 998, email: 'github@example.com' };
+    const token = this.generateToken(user);
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    return {
+      success: true,
+      user,
+      token
+    };
   }
 
-  async loginWithOXPay(): Promise<AuthResponse> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const user = { id: 997, email: 'oxpay@example.com' };
-        const token = this.generateToken(user);
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        resolve({
-          success: true,
-          user,
-          token
-        });
-      }, 1000);
-    });
+  loginWithOXPay = async (): Promise<AuthResponse> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const user = { id: 997, email: 'oxpay@example.com' };
+    const token = this.generateToken(user);
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    return {
+      success: true,
+      user,
+      token
+    };
   }
 
-  async loginWithSingPass(): Promise<AuthResponse> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const user = { id: 996, email: 'singpass@example.com' };
-        const token = this.generateToken(user);
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        resolve({
-          success: true,
-          user,
-          token
-        });
-      }, 1000);
-    });
+  loginWithSingPass = async (): Promise<AuthResponse> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const user = { id: 996, email: 'singpass@example.com' };
+    const token = this.generateToken(user);
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    return {
+      success: true,
+      user,
+      token
+    };
   }
 
-  async loginWithCorPass(): Promise<AuthResponse> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const user = { id: 995, email: 'corpass@example.com' };
-        const token = this.generateToken(user);
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        resolve({
-          success: true,
-          user,
-          token
-        });
-      }, 1000);
-    });
+  loginWithCorPass = async (): Promise<AuthResponse> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const user = { id: 995, email: 'corpass@example.com' };
+    const token = this.generateToken(user);
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    return {
+      success: true,
+      user,
+      token
+    };
   }
 
   // Logout method
@@ -191,62 +184,59 @@ class AuthService {
 
   // Verify email with OTP
   async verifyEmail(email: string, otpCode: string): Promise<AuthResponse> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Simulate OTP verification (for demo purposes, accept any 4-digit code)
-        if (otpCode.length === 4 && /^\d{4}$/.test(otpCode)) {
-          // Find the user and log them in after successful verification
-          const user = this.users.find((u: StoredUser) => u.email === email);
-          if (user) {
-            const token = this.generateToken(user);
-            localStorage.setItem('authToken', token);
-            resolve({
-              success: true,
-              user: { id: user.id, email: user.email },
-              token,
-              message: 'Email verified successfully'
-            });
-          } else {
-            reject({
-              success: false,
-              message: 'User not found'
-            });
-          }
-        } else {
-          reject({
-            success: false,
-            message: 'Invalid verification code'
-          });
-        }
-      }, 1000);
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Simulate OTP verification (for demo purposes, accept any 4-digit code)
+    if (otpCode.length === 4 && /^\d{4}$/.test(otpCode)) {
+      // Find the user and log them in after successful verification
+      const user = this.users.find((u: StoredUser) => u.email === email);
+      if (user) {
+        const token = this.generateToken(user);
+        localStorage.setItem('authToken', token);
+        return {
+          success: true,
+          user: { id: user.id, email: user.email },
+          token,
+          message: 'Email verified successfully'
+        };
+      } else {
+        throw {
+          success: false,
+          message: 'User not found'
+        };
+      }
+    } else {
+      throw {
+        success: false,
+        message: 'Invalid verification code'
+      };
+    }
   }
 
   // Resend verification code
   async resendVerificationCode(email: string): Promise<AuthResponse> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          message: 'Verification code sent successfully'
-        });
-      }, 1000);
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    return {
+      success: true,
+      message: 'Verification code sent successfully'
+    };
   }
 
   // Validate token
   async validateToken(token: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          const isExpired = Date.now() > payload.exp;
-          resolve(!isExpired);
-        } catch (error) {
-          resolve(false);
-        }
-      }, 100);
-    });
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const isExpired = Date.now() > payload.exp;
+      return !isExpired;
+    } catch (error) {
+      return false;
+    }
   }
 
   // Generate dummy JWT token
