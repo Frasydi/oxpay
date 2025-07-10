@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  Box, 
-  Typography, 
+import {
+  Box,
+  Typography,
   Button,
   Card,
   Stack,
@@ -88,17 +88,17 @@ const Dashboard: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <Box sx={{ 
+      <Box sx={{
         p: 3
       }}>
-        <Box sx={{ 
-          maxWidth: '1200px', 
+        <Box sx={{
+          maxWidth: '1200px',
           mx: 'auto'
         }}>
           {/* Welcome Section */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h3" sx={{ 
-              fontWeight: 'bold', 
+            <Typography variant="h3" sx={{
+              fontWeight: 'bold',
               color: '#1f2937',
               fontFamily: '"IBM Plex Sans", sans-serif',
               fontSize: '2.5rem',
@@ -106,7 +106,7 @@ const Dashboard: React.FC = () => {
             }}>
               Welcome {user?.email?.split('@')[0]}!
             </Typography>
-            <Typography variant="body1" sx={{ 
+            <Typography variant="body1" sx={{
               color: '#6b7280',
               fontSize: '1.125rem'
             }}>
@@ -115,18 +115,18 @@ const Dashboard: React.FC = () => {
           </Box>
 
           {/* Progress Cards */}
-          <Box sx={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: 3, 
-            mb: 4 
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 3,
+            mb: 4
           }}>
             {progressSteps.map((step, index) => {
               const colors = getCardColors(step.status);
               const IconComponent = step.icon;
-              
+
               return (
-                <Card key={step.name} sx={{ 
+                <Card key={step.name} sx={{
                   px: 4,
                   py: 2,
                   minHeight: '140px',
@@ -163,105 +163,41 @@ const Dashboard: React.FC = () => {
                     })
                   }
                 }}>
-                    {/* Header with icon and status */}
-                    <Box sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'flex-start',
-                      mb: 2
+                  {/* Header with icon and status */}
+                  <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    mb: 2
+                  }}>
+                    <Box sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: '50%',
+                      backgroundColor: colors.iconBg,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}>
-                      <Box sx={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: '50%',
-                        backgroundColor: colors.iconBg,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        <IconComponent size="28" color={colors.iconColor} />
-                      </Box>
-                      
-                      <Box sx={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: '50%',
-                        border: step.status === 'success' ? '2px solid #374151' : '2px solid #e5e7eb',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        {step.status === 'success' && (
-                          <Box sx={{
-                            width: 14,
-                            height: 14,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}>
-                            <svg
-                              width="10"
-                              height="8"
-                              viewBox="0 0 10 8"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M1 4L3.5 6.5L9 1.5"
-                                stroke="#374151"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </Box>
-                        )}
-                      </Box>
+                      <IconComponent size="28" color={colors.iconColor} />
                     </Box>
 
-                    {/* Progress info */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Box sx={{
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        backgroundColor: colors.bgColor,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        mr: 2
-                      }}>
-                        <Typography sx={{ 
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          color: colors.textColor
-                        }}>
-                          {index + 1}
-                        </Typography>
-                      </Box>
-                      <Typography variant="h6" sx={{ 
-                        fontWeight: 600,
-                        color: '#1f2937',
-                        fontSize: '0.875rem'
-                      }}>
-                        {step.name}
-                      </Typography>
-                    </Box>
-
-                    {/* Action button */}
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      startIcon={step.status === 'success' ? (
+                    <Box sx={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: '50%',
+                      border: step.status === 'success' ? '2px solid #374151' : '2px solid #e5e7eb',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      {step.status === 'success' && (
                         <Box sx={{
-                          width: 18,
-                          height: 18,
-                          borderRadius: '50%',
-                          border: '1.5px solid white',
+                          width: 14,
+                          height: 14,
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: 'transparent'
+                          justifyContent: 'center'
                         }}>
                           <svg
                             width="10"
@@ -272,40 +208,104 @@ const Dashboard: React.FC = () => {
                           >
                             <path
                               d="M1 4L3.5 6.5L9 1.5"
-                              stroke="white"
+                              stroke="#374151"
                               strokeWidth="1.5"
                               strokeLinecap="round"
                               strokeLinejoin="round"
                             />
                           </svg>
                         </Box>
-                      ) : null}
-                      sx={{
-                        py: 0.5,
-                        borderRadius: '20px',
-                        backgroundColor: colors.buttonBgColor || colors.bgColor,
-                        color: colors.buttonTextColor || colors.textColor,
-                        textTransform: 'none',
+                      )}
+                    </Box>
+                  </Box>
+
+                  {/* Progress info */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <Box sx={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: '50%',
+                      backgroundColor: colors.bgColor,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mr: 2
+                    }}>
+                      <Typography sx={{
+                        fontSize: '0.75rem',
                         fontWeight: 600,
-                        boxShadow: 'none',
-                        '&:hover': {
-                          backgroundColor: colors.buttonBgColor || colors.bgColor,
-                          opacity: 0.9,
-                          boxShadow: 'none'
-                        }
-                      }}
-                    >
-                      {step.status === 'success' ? 'Succeeded' : step.buttonText}
-                    </Button>
-                  </Card>
+                        color: colors.textColor
+                      }}>
+                        {index + 1}
+                      </Typography>
+                    </Box>
+                    <Typography variant="h6" sx={{
+                      fontWeight: 600,
+                      color: '#1f2937',
+                      fontSize: '0.875rem'
+                    }}>
+                      {step.name}
+                    </Typography>
+                  </Box>
+
+                  {/* Action button */}
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    startIcon={step.status === 'success' ? (
+                      <Box sx={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: '50%',
+                        border: '1.5px solid white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'transparent'
+                      }}>
+                        <svg
+                          width="10"
+                          height="8"
+                          viewBox="0 0 10 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M1 4L3.5 6.5L9 1.5"
+                            stroke="white"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </Box>
+                    ) : null}
+                    sx={{
+                      py: 0.5,
+                      borderRadius: '20px',
+                      backgroundColor: colors.buttonBgColor || colors.bgColor,
+                      color: colors.buttonTextColor || colors.textColor,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      boxShadow: 'none',
+                      '&:hover': {
+                        backgroundColor: colors.buttonBgColor || colors.bgColor,
+                        opacity: 0.9,
+                        boxShadow: 'none'
+                      }
+                    }}
+                  >
+                    {step.status === 'success' ? 'Succeeded' : step.buttonText}
+                  </Button>
+                </Card>
               );
             })}
           </Box>
 
           {/* Explore Products Section */}
           <Box sx={{ mb: 4, mt: 12, textAlign: 'center' }}>
-            <Typography variant="h4" sx={{ 
-              fontWeight: 'bold', 
+            <Typography variant="h4" sx={{
+              fontWeight: 'bold',
               color: '#1f2937',
               fontFamily: '"IBM Plex Sans", sans-serif',
               fontSize: '1.75rem',
@@ -313,7 +313,7 @@ const Dashboard: React.FC = () => {
             }}>
               Explore our products!
             </Typography>
-            <Typography variant="body1" sx={{ 
+            <Typography variant="body1" sx={{
               color: '#6b7280',
               fontSize: '1rem',
               mb: 4,
@@ -323,7 +323,7 @@ const Dashboard: React.FC = () => {
             </Typography>
 
             {/* Pill-shaped Connected Tabs */}
-            <PillTabs 
+            <PillTabs
               tabs={[
                 { label: 'Store payments', value: 'store-payments' },
                 { label: 'Web integrations', value: 'web-integrations' }
@@ -337,19 +337,19 @@ const Dashboard: React.FC = () => {
               {/* Store Payments Tab Content */}
               <Fade in={selectedTab === 0} timeout={500}>
                 <Box sx={{ display: selectedTab === 0 ? 'block' : 'none' }}>
-                  <Box sx={{ 
-                    display: 'flex', 
+                  <Box sx={{
+                    display: 'flex',
                     flexDirection: 'column',
-                    gap: 4 
+                    gap: 4
                   }}>
                     {/* First Row - In Store and Virtual Payment Terminals */}
-                    <Box sx={{ 
-                      display: 'grid', 
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
-                      gap: 4 
+                    <Box sx={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                      gap: 4
                     }}>
                       {/* In Store Payment Terminal Card */}
-                      <Card sx={{ 
+                      <Card sx={{
                         p: 4,
                         borderRadius: '14px',
                         bgcolor: 'white',
@@ -358,8 +358,8 @@ const Dashboard: React.FC = () => {
                           transform: 'translateY(-2px)'
                         }
                       }}>
-                        <Typography variant="h5" sx={{ 
-                          fontWeight: 'bold', 
+                        <Typography variant="h5" sx={{
+                          fontWeight: 'bold',
                           color: '#1f2937',
                           mb: 2,
                           fontSize: '1.5rem',
@@ -367,7 +367,7 @@ const Dashboard: React.FC = () => {
                         }}>
                           In Store Payment Terminal
                         </Typography>
-                        <Typography variant="body1" sx={{ 
+                        <Typography variant="body1" sx={{
                           color: '#6b7280',
                           fontSize: '1rem',
                           mb: 3,
@@ -376,34 +376,37 @@ const Dashboard: React.FC = () => {
                         }}>
                           Download now from the App Store or Google Play and simplify your financial life.
                         </Typography>
-                        <Box>
+                        <Box sx={{
+                          display : "flex",
+                          justifyContent : "flex-start"
+                        }}>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              backgroundColor: '#8b5cf6',
+                              color: 'white',
+                              borderRadius: '25px',
+                              py: 1,
+                              px: 3,
+                              textTransform: 'none',
+                              fontWeight: 600,
+                              boxShadow: 'none',
+                              '&:hover': {
+                                backgroundColor: '#7c3aed',
+                                boxShadow: 'none'
+                              }
+                            }}
+                          >
+                            Contact Sales
+                          </Button>
+
+                        </Box>
 
 
-
-                        <Button
-                          variant="contained"
-                          sx={{
-                            backgroundColor: '#8b5cf6',
-                            color: 'white',
-                            borderRadius: '25px',
-                            py: 1,
-                            px: 3,
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            boxShadow: 'none',
-                            '&:hover': {
-                              backgroundColor: '#7c3aed',
-                              boxShadow: 'none'
-                            }
-                          }}
-                        >
-                          Contact Sales
-                        </Button>
-                        
                       </Card>
 
                       {/* Virtual Payment Terminal Card */}
-                      <Card sx={{ 
+                      <Card sx={{
                         p: 4,
                         borderRadius: '14px',
                         bgcolor: 'white',
@@ -412,8 +415,8 @@ const Dashboard: React.FC = () => {
                           transform: 'translateY(-2px)'
                         }
                       }}>
-                        <Typography variant="h5" sx={{ 
-                          fontWeight: 'bold', 
+                        <Typography variant="h5" sx={{
+                          fontWeight: 'bold',
                           color: '#1f2937',
                           mb: 2,
                           fontSize: '1.5rem',
@@ -421,7 +424,7 @@ const Dashboard: React.FC = () => {
                         }}>
                           Virtual Payment Terminal
                         </Typography>
-                        <Typography variant="body1" sx={{ 
+                        <Typography variant="body1" sx={{
                           color: '#6b7280',
                           fontSize: '1rem',
                           mb: 3,
@@ -460,7 +463,7 @@ const Dashboard: React.FC = () => {
                     </Box>
 
                     {/* Store 1 - Odd Layout (Image + Text) */}
-                    <Card sx={{ 
+                    <Card sx={{
                       p: 4,
                       borderRadius: '14px',
                       bgcolor: 'white',
@@ -470,14 +473,14 @@ const Dashboard: React.FC = () => {
                         transform: 'translateY(-2px)'
                       }
                     }}>
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: 4,
                         flexDirection: { xs: 'column', md: 'row' }
                       }}>
                         {/* Image */}
-                        <Box sx={{ 
+                        <Box sx={{
                           minWidth: { xs: '100%', md: '300px' },
                           maxWidth: { xs: '100%', md: '300px' },
                           height: '300px',
@@ -501,18 +504,18 @@ const Dashboard: React.FC = () => {
                             }}
                           />
                         </Box>
-                        
+
                         {/* Text Content */}
                         <Box sx={{ flex: 1, textAlign: 'left' }}>
-                          <Typography variant="h5" sx={{ 
-                            fontWeight: 'bold', 
+                          <Typography variant="h5" sx={{
+                            fontWeight: 'bold',
                             color: '#1f2937',
                             mb: 2,
                             fontSize: '1.5rem'
                           }}>
                             Oxpay Merchant App – Power in Your Pocket
                           </Typography>
-                          <Typography variant="body1" sx={{ 
+                          <Typography variant="body1" sx={{
                             color: '#6b7280',
                             fontSize: '1rem',
                             mb: 3,
@@ -522,7 +525,7 @@ const Dashboard: React.FC = () => {
                             <Box component="ul" sx={{ listStyle: 'none', pl: 0, mt: 2, mb: 2 }}>
                               {[
                                 'Accept payments',
-                                'Issue refunds', 
+                                'Issue refunds',
                                 'Send receipts',
                                 'Create payment links',
                                 'Track every transaction in real-time'
@@ -587,7 +590,7 @@ const Dashboard: React.FC = () => {
                     </Card>
 
                     {/* Store 2 - Even Layout (Text + Image) */}
-                    <Card sx={{ 
+                    <Card sx={{
                       p: 4,
                       borderRadius: '14px',
                       bgcolor: 'white',
@@ -597,23 +600,23 @@ const Dashboard: React.FC = () => {
                         transform: 'translateY(-2px)'
                       }
                     }}>
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: 4,
                         flexDirection: { xs: 'column', md: 'row' }
                       }}>
                         {/* Text Content */}
                         <Box sx={{ flex: 1, textAlign: 'left', order: { xs: 2, md: 1 } }}>
-                          <Typography variant="h5" sx={{ 
-                            fontWeight: 'bold', 
+                          <Typography variant="h5" sx={{
+                            fontWeight: 'bold',
                             color: '#1f2937',
                             mb: 2,
                             fontSize: '1.5rem'
                           }}>
                             Create Payment Links
                           </Typography>
-                          <Typography variant="body1" sx={{ 
+                          <Typography variant="body1" sx={{
                             color: '#6b7280',
                             fontSize: '1rem',
                             mb: 3,
@@ -641,9 +644,9 @@ const Dashboard: React.FC = () => {
                             Get Started
                           </Button>
                         </Box>
-                        
+
                         {/* Image */}
-                        <Box sx={{ 
+                        <Box sx={{
                           minWidth: { xs: '100%', md: '300px' },
                           maxWidth: { xs: '100%', md: '300px' },
                           height: '300px',
@@ -672,7 +675,7 @@ const Dashboard: React.FC = () => {
                     </Card>
 
                     {/* Store 3 - Odd Layout (Image + Text) */}
-                    <Card sx={{ 
+                    <Card sx={{
                       p: 4,
                       borderRadius: '14px',
                       bgcolor: 'white',
@@ -682,14 +685,14 @@ const Dashboard: React.FC = () => {
                         transform: 'translateY(-2px)'
                       }
                     }}>
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: 4,
                         flexDirection: { xs: 'column', md: 'row' }
                       }}>
                         {/* Image */}
-                        <Box sx={{ 
+                        <Box sx={{
                           minWidth: { xs: '100%', md: '300px' },
                           maxWidth: { xs: '100%', md: '300px' },
                           height: '300px',
@@ -713,18 +716,18 @@ const Dashboard: React.FC = () => {
                             }}
                           />
                         </Box>
-                        
+
                         {/* Text Content */}
                         <Box sx={{ flex: 1, textAlign: 'left' }}>
-                          <Typography variant="h5" sx={{ 
-                            fontWeight: 'bold', 
+                          <Typography variant="h5" sx={{
+                            fontWeight: 'bold',
                             color: '#1f2937',
                             mb: 2,
                             fontSize: '1.5rem'
                           }}>
                             Send Receipt via Email
                           </Typography>
-                          <Typography variant="body1" sx={{ 
+                          <Typography variant="body1" sx={{
                             color: '#6b7280',
                             fontSize: '1rem',
                             mb: 3,
@@ -761,13 +764,13 @@ const Dashboard: React.FC = () => {
               {/* Web Integrations Tab Content */}
               <Fade in={selectedTab === 1} timeout={500}>
                 <Box sx={{ display: selectedTab === 1 ? 'block' : 'none' }}>
-                  <Box sx={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
-                    gap: 4 
+                  <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                    gap: 4
                   }}>
                     {/* Payment Gateway API Card */}
-                    <Card sx={{ 
+                    <Card sx={{
                       p: 4,
                       borderRadius: '14px',
                       bgcolor: 'white',
@@ -777,8 +780,8 @@ const Dashboard: React.FC = () => {
                         transform: 'translateY(-2px)'
                       }
                     }}>
-                      <Typography variant="h5" sx={{ 
-                        fontWeight: 'bold', 
+                      <Typography variant="h5" sx={{
+                        fontWeight: 'bold',
                         color: '#1f2937',
                         mb: 2,
                         fontSize: '1.5rem',
@@ -786,7 +789,7 @@ const Dashboard: React.FC = () => {
                       }}>
                         Payment Gateway API
                       </Typography>
-                      <Typography variant="body1" sx={{ 
+                      <Typography variant="body1" sx={{
                         color: '#6b7280',
                         fontSize: '1rem',
                         mb: 3,
@@ -818,7 +821,7 @@ const Dashboard: React.FC = () => {
                     </Card>
 
                     {/* E-commerce Plugins Card */}
-                    <Card sx={{ 
+                    <Card sx={{
                       p: 4,
                       borderRadius: '14px',
                       bgcolor: 'white',
@@ -828,8 +831,8 @@ const Dashboard: React.FC = () => {
                         transform: 'translateY(-2px)'
                       }
                     }}>
-                      <Typography variant="h5" sx={{ 
-                        fontWeight: 'bold', 
+                      <Typography variant="h5" sx={{
+                        fontWeight: 'bold',
                         color: '#1f2937',
                         mb: 2,
                         fontSize: '1.5rem',
@@ -837,7 +840,7 @@ const Dashboard: React.FC = () => {
                       }}>
                         E-commerce Plugins
                       </Typography>
-                      <Typography variant="body1" sx={{ 
+                      <Typography variant="body1" sx={{
                         color: '#6b7280',
                         fontSize: '1rem',
                         mb: 3,
