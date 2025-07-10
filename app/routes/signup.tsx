@@ -13,8 +13,10 @@ import {
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';
 import AuthButton from '~/components/auth/AuthButton';
+import { useNavigate } from 'react-router';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -61,7 +63,8 @@ const SignUp = () => {
       console.log('Sign up successful:', response);
       
       // Navigate to verify email page with the user's email
-      window.location.href = `/verify-email?email=${encodeURIComponent(email)}`;
+      
+     navigate(`/verify-email?email=${encodeURIComponent(email)}`);
       
     } catch (error: any) {
       setError(error.message || 'Sign up failed');

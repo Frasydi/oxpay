@@ -117,11 +117,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         navigate('/login');
     };
 
-    // Handle authentication-based redirects
+    // Initial auth check and redirect only on app start
     useEffect(() => {
-        if (!isLoading) {
+        const performInitialCheck = async () => {
+            await checkAuth();
+            
+            // Only redirect on initial load, not on page changes
             const currentPath = location.pathname;
-
+            
             if (isAuthenticated) {
                 // User is authenticated
                 if (publicRoutes.includes(currentPath)) {
@@ -136,16 +139,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (protectedRoutes.includes(currentPath)) {
                     // Redirect unauthenticated users to login
                     navigate('/login');
+                } else if( currentPath === '/') {
+                    // Redirect unauthenticated users from home to login
+                    navigate('/login');
                 }
-                // Allow unauthenticated users to stay on home page and other public routes
             }
-        }
-    }, [isAuthenticated, isLoading, location.pathname, navigate]);
-
-    // Initial auth check
-    useEffect(() => {
-        checkAuth();
-    }, []);
+        };
+        
+        performInitialCheck();
+    }, []); // Only run once on mount
 
     const value: AuthContextType = {
         user,

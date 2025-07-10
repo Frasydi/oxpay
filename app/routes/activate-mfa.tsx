@@ -14,7 +14,6 @@ import {
 import { Sms, Lock, ArrowLeft2, Barcode, TickCircle, Book1, ArrowDown2 } from 'iconsax-react';
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';
-import ProtectedRoute from '~/components/auth/ProtectedRoute';
 
 interface ActivateMFAProps {
   email?: string;
@@ -242,19 +241,6 @@ const ActivateMFA: React.FC<ActivateMFAProps> = ({ email: propEmail }) => {
                         p: 2,
                         borderRadius: '12px',
                         overflow: 'hidden',
-                        '&::before': {
-                          content: '""',
-                          position: 'absolute',
-                          top: '15px',
-                          left: '10px',
-                          right: '10px',
-                          height: '30px',
-                          background: 'linear-gradient(180deg, rgba(167, 77, 230, 0) 0%, rgba(167, 77, 230, 0.3) 30%, rgba(167, 77, 230, 0.6) 70%, rgba(167, 77, 230, 0.8) 100%)',
-                          animation: 'scanGradient 4s ease-in-out infinite',
-                          borderRadius: '2px',
-                          zIndex: 1,
-                          transformOrigin: 'top'
-                        },
                         '&::after': {
                           content: '""',
                           position: 'absolute',
@@ -267,20 +253,6 @@ const ActivateMFA: React.FC<ActivateMFAProps> = ({ email: propEmail }) => {
                           animation: 'scanLine 4s ease-in-out infinite',
                           borderRadius: '1px',
                           zIndex: 2
-                        },
-                        '@keyframes scanGradient': {
-                          '0%': {
-                            transform: 'translateY(-15px)',
-                            height: '30px'
-                          },
-                          '50%': {
-                            transform: 'translateY(135px)',
-                            height: '30px'
-                          },
-                          '100%': {
-                            transform: 'translateY(-15px)',
-                            height: '30px'
-                          }
                         },
                         '@keyframes scanLine': {
                           '0%': {
@@ -357,12 +329,4 @@ const ActivateMFA: React.FC<ActivateMFAProps> = ({ email: propEmail }) => {
   );
 };
 
-const ProtectedActivateMFA = () => {
-  return (
-    <ProtectedRoute requireAuth={false}>
-      <ActivateMFA />
-    </ProtectedRoute>
-  );
-};
-
-export default ProtectedActivateMFA;
+export default ActivateMFA;
