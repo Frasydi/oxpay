@@ -8,6 +8,7 @@ interface AuthButtonProps {
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
   fullWidth?: boolean;
+  hasInputs?: boolean;
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({
@@ -16,7 +17,8 @@ const AuthButton: React.FC<AuthButtonProps> = ({
   disabled = false,
   onClick,
   type = 'submit',
-  fullWidth = true
+  fullWidth = true,
+  hasInputs = false
 }) => {
   return (
     <Button
@@ -28,12 +30,12 @@ const AuthButton: React.FC<AuthButtonProps> = ({
       sx={{
         py: 1,
         borderRadius: '25px',
-        bgcolor: '#D1D5DB',
+        bgcolor: hasInputs ? '#8b5cf6' : '#D1D5DB',
         color: 'white',
         fontWeight: 'bold',
         textTransform: 'none',
         '&:hover': {
-          bgcolor: '#9CA3AF'
+          bgcolor: hasInputs ? '#7c3aed' : '#9CA3AF'
         },
         '&:disabled': {
           bgcolor: '#e5e7eb'

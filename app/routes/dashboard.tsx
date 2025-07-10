@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { 
   Box, 
@@ -7,15 +7,83 @@ import {
   Card,
   Stack,
   Avatar,
-  Divider
+  Divider,
+  Fade
 } from '@mui/material';
-import { Logout, UserEdit, Shield } from 'iconsax-react';
+import { Logout, UserEdit, Shield, TickCircle, User, Sms, SecurityUser, MoneyChange } from 'iconsax-react';
 import authService from '~/services/AuthService';
 import ProtectedRoute from '~/components/auth/ProtectedRoute';
+import DashboardLayout from '~/components/dashboard/DashboardLayout';
+import PillTabs from '~/components/dashboard/PillTabs';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  // Progress data
+  const progressSteps = [
+    {
+      name: 'Sign up',
+      buttonText: 'Sign Up',
+      icon: User,
+      status: 'success' // completed
+    },
+    {
+      name: 'Verify email',
+      buttonText: 'Proceed to activate',
+      icon: Sms,
+      status: 'current' // current progress
+    },
+    {
+      name: 'KYC check',
+      buttonText: 'Verify',
+      icon: SecurityUser,
+      status: 'upcoming' // upcoming
+    },
+    {
+      name: 'Start transaction',
+      buttonText: 'Get started',
+      icon: MoneyChange,
+      status: 'upcoming' // upcoming
+    }
+  ];
+
+  const getCardColors = (status: string) => {
+    switch (status) {
+      case 'success':
+        return {
+          bgColor: '#374151',
+          textColor: 'white',
+          iconBg: '#f8fafc',
+          iconColor: '#374151',
+          borderColor: '#374151',
+          buttonBgColor: '#374151',
+          buttonTextColor: 'white'
+        };
+      case 'current':
+        return {
+          bgColor: '#8b5cf6',
+          textColor: 'white',
+          iconBg: '#f8fafc',
+          iconColor: '#8b5cf6',
+          borderColor: '#8b5cf6',
+          buttonBgColor: '#8b5cf6',
+          buttonTextColor: 'white'
+        };
+      case 'upcoming':
+      default:
+        return {
+          bgColor: '#e5e7eb',
+          textColor: '#374151',
+          iconBg: '#f8fafc',
+          iconColor: '#9ca3af',
+          borderColor: '#e5e7eb',
+          buttonBgColor: '#B4B2B5',
+          buttonTextColor: 'white'
+        };
+    }
+  };
 
   const handleLogout = () => {
     authService.logout();
@@ -23,196 +91,501 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%)',
-      p: 3,
-      transition: 'all 0.3s ease'
-    }}>
+    <DashboardLayout>
       <Box sx={{ 
-        maxWidth: '800px', 
-        mx: 'auto'
+        p: 3
       }}>
-        {/* Header */}
         <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          mb: 4
+          maxWidth: '1200px', 
+          mx: 'auto'
         }}>
-          <Box>
+          {/* Welcome Section */}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h3" sx={{ 
+              fontWeight: 'bold', 
+              color: '#1f2937',
+              fontFamily: '"IBM Plex Sans", sans-serif',
+              fontSize: '2.5rem',
+              mb: 2
+            }}>
+              Welcome {user?.email?.split('@')[0]}!
+            </Typography>
+            <Typography variant="body1" sx={{ 
+              color: '#6b7280',
+              fontSize: '1.125rem'
+            }}>
+              Get started with Productboard by completing the following tasks.
+            </Typography>
+          </Box>
+
+          {/* Progress Cards */}
+          <Box sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+            gap: 3, 
+            mb: 4 
+          }}>
+            {progressSteps.map((step, index) => {
+              const colors = getCardColors(step.status);
+              const IconComponent = step.icon;
+              
+              return (
+                <Card key={step.name} sx={{ 
+                  px: 4,
+                  py: 2,
+                  minHeight: '140px',
+                  border: `2px solid ${colors.borderColor}`,
+                  borderRadius: '14px',
+                  boxShadow: 'none',
+                  bgcolor: 'white',
+                  transition: 'all 0.3s ease',
+                  // Add animation for current status
+                  ...(step.status === 'current' && {
+                    animation: 'pulse 2s ease-in-out infinite',
+                    '@keyframes pulse': {
+                      '0%': {
+                        transform: 'scale(1)',
+                        boxShadow: `0 0 0 0 rgba(139, 92, 246, 0.4)`
+                      },
+                      '50%': {
+                        transform: 'scale(1.02)',
+                        boxShadow: `0 0 0 8px rgba(139, 92, 246, 0.1)`
+                      },
+                      '100%': {
+                        transform: 'scale(1)',
+                        boxShadow: `0 0 0 0 rgba(139, 92, 246, 0)`
+                      }
+                    }
+                  }),
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    borderColor: colors.borderColor,
+                    opacity: 0.8,
+                    // Pause animation on hover for current status
+                    ...(step.status === 'current' && {
+                      animationPlayState: 'paused'
+                    })
+                  }
+                }}>
+                    {/* Header with icon and status */}
+                    <Box sx={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'flex-start',
+                      mb: 2
+                    }}>
+                      <Box sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: '50%',
+                        backgroundColor: colors.iconBg,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <IconComponent size="28" color={colors.iconColor} />
+                      </Box>
+                      
+                      <Box sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        border: step.status === 'success' ? '2px solid #374151' : '2px solid #e5e7eb',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        {step.status === 'success' && (
+                          <Box sx={{
+                            width: 14,
+                            height: 14,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            <svg
+                              width="10"
+                              height="8"
+                              viewBox="0 0 10 8"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M1 4L3.5 6.5L9 1.5"
+                                stroke="#374151"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </Box>
+                        )}
+                      </Box>
+                    </Box>
+
+                    {/* Progress info */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Box sx={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        backgroundColor: colors.bgColor,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mr: 2
+                      }}>
+                        <Typography sx={{ 
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          color: colors.textColor
+                        }}>
+                          {index + 1}
+                        </Typography>
+                      </Box>
+                      <Typography variant="h6" sx={{ 
+                        fontWeight: 600,
+                        color: '#1f2937',
+                        fontSize: '0.875rem'
+                      }}>
+                        {step.name}
+                      </Typography>
+                    </Box>
+
+                    {/* Action button */}
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      startIcon={step.status === 'success' ? (
+                        <Box sx={{
+                          width: 18,
+                          height: 18,
+                          borderRadius: '50%',
+                          border: '1.5px solid white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'transparent'
+                        }}>
+                          <svg
+                            width="10"
+                            height="8"
+                            viewBox="0 0 10 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M1 4L3.5 6.5L9 1.5"
+                              stroke="white"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </Box>
+                      ) : null}
+                      sx={{
+                        py: 0.5,
+                        borderRadius: '20px',
+                        backgroundColor: colors.buttonBgColor || colors.bgColor,
+                        color: colors.buttonTextColor || colors.textColor,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        boxShadow: 'none',
+                        '&:hover': {
+                          backgroundColor: colors.buttonBgColor || colors.bgColor,
+                          opacity: 0.9,
+                          boxShadow: 'none'
+                        }
+                      }}
+                    >
+                      {step.status === 'success' ? 'Succeeded' : step.buttonText}
+                    </Button>
+                  </Card>
+              );
+            })}
+          </Box>
+
+          {/* Explore Products Section */}
+          <Box sx={{ mb: 4, mt: 12, textAlign: 'center' }}>
             <Typography variant="h4" sx={{ 
               fontWeight: 'bold', 
               color: '#1f2937',
               fontFamily: '"IBM Plex Sans", sans-serif',
-              fontSize: '2rem'
+              fontSize: '1.75rem',
+              mb: 2
             }}>
-              Dashboard
+              Explore our products!
             </Typography>
-            <Typography variant="body1" sx={{ color: '#6b7280', mt: 1 }}>
-              Welcome back, {user?.email}
+            <Typography variant="body1" sx={{ 
+              color: '#6b7280',
+              fontSize: '1rem',
+              mb: 4,
+              width: '100%'
+            }}>
+              Discover flexible payment solutions tailored for your business—whether in-store, online, or on the go.
             </Typography>
+
+            {/* Pill-shaped Connected Tabs */}
+            <PillTabs 
+              tabs={[
+                { label: 'Store payments', value: 'store-payments' },
+                { label: 'Web integrations', value: 'web-integrations' }
+              ]}
+              defaultSelected={selectedTab}
+              onTabChange={(index, tab) => setSelectedTab(index)}
+            />
+
+            {/* Tab Content */}
+            <Box sx={{ mt: 6 }}>
+              {/* Store Payments Tab Content */}
+              <Fade in={selectedTab === 0} timeout={500}>
+                <Box sx={{ display: selectedTab === 0 ? 'block' : 'none' }}>
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
+                    gap: 4 
+                  }}>
+                    {/* In Store Payment Terminal Card */}
+                    <Card sx={{ 
+                      p: 3,
+                      border: '1px solid #DBDBE1',
+                      borderRadius: '14px',
+                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                      bgcolor: 'white',
+                      transition: 'all 0.3s ease',
+                      textAlign: 'left',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                      }
+                    }}>
+                      <Typography variant="h5" sx={{ 
+                        fontWeight: 'bold', 
+                        color: '#1f2937',
+                        mb: 2,
+                        fontSize: '1.5rem',
+                        textAlign: 'left'
+                      }}>
+                        In Store Payment Terminal
+                      </Typography>
+                      <Typography variant="body1" sx={{ 
+                        color: '#6b7280',
+                        fontSize: '1rem',
+                        mb: 3,
+                        lineHeight: 1.6,
+                        textAlign: 'left'
+                      }}>
+                        Download now from the App Store or Google Play and simplify your financial life.
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: '#8b5cf6',
+                          color: 'white',
+                          borderRadius: '25px',
+                          py: 1,
+                          px: 3,
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          boxShadow: 'none',
+                          alignSelf: 'flex-start',
+                          '&:hover': {
+                            backgroundColor: '#7c3aed',
+                            boxShadow: 'none'
+                          }
+                        }}
+                      >
+                        Contact Sales
+                      </Button>
+                    </Card>
+
+                    {/* Virtual Payment Terminal Card */}
+                    <Card sx={{ 
+                      p: 3,
+                      border: '1px solid #DBDBE1',
+                      borderRadius: '14px',
+                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                      bgcolor: 'white',
+                      transition: 'all 0.3s ease',
+                      textAlign: 'left',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                      }
+                    }}>
+                      <Typography variant="h5" sx={{ 
+                        fontWeight: 'bold', 
+                        color: '#1f2937',
+                        mb: 2,
+                        fontSize: '1.5rem',
+                        textAlign: 'left'
+                      }}>
+                        Virtual Payment Terminal
+                      </Typography>
+                      <Typography variant="body1" sx={{ 
+                        color: '#6b7280',
+                        fontSize: '1rem',
+                        mb: 3,
+                        lineHeight: 1.6,
+                        textAlign: 'left'
+                      }}>
+                        Download now from the App Store or Google Play and simplify your financial life.
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                        <Box
+                          component="img"
+                          src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                          alt="Get it on Google Play"
+                          sx={{
+                            height: 40,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              opacity: 0.8
+                            }
+                          }}
+                        />
+                        <Box
+                          component="img"
+                          src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                          alt="Download on App Store"
+                          sx={{
+                            height: 40,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              opacity: 0.8
+                            }
+                          }}
+                        />
+                      </Box>
+                    </Card>
+                  </Box>
+                </Box>
+              </Fade>
+
+              {/* Web Integrations Tab Content */}
+              <Fade in={selectedTab === 1} timeout={500}>
+                <Box sx={{ display: selectedTab === 1 ? 'block' : 'none' }}>
+                  <Box sx={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
+                    gap: 4 
+                  }}>
+                    {/* Payment Gateway API Card */}
+                    <Card sx={{ 
+                      p: 4,
+                      border: '1px solid #DBDBE1',
+                      borderRadius: '14px',
+                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                      bgcolor: 'white',
+                      transition: 'all 0.3s ease',
+                      textAlign: 'left',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                      }
+                    }}>
+                      <Typography variant="h5" sx={{ 
+                        fontWeight: 'bold', 
+                        color: '#1f2937',
+                        mb: 2,
+                        fontSize: '1.5rem',
+                        textAlign: 'left'
+                      }}>
+                        Payment Gateway API
+                      </Typography>
+                      <Typography variant="body1" sx={{ 
+                        color: '#6b7280',
+                        fontSize: '1rem',
+                        mb: 3,
+                        lineHeight: 1.6,
+                        textAlign: 'left'
+                      }}>
+                        Integrate secure payment processing directly into your website or application with our robust API.
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: '#8b5cf6',
+                          color: 'white',
+                          borderRadius: '25px',
+                          py: 1,
+                          px: 3,
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          boxShadow: 'none',
+                          alignSelf: 'flex-start',
+                          '&:hover': {
+                            backgroundColor: '#7c3aed',
+                            boxShadow: 'none'
+                          }
+                        }}
+                      >
+                        View Documentation
+                      </Button>
+                    </Card>
+
+                    {/* E-commerce Plugins Card */}
+                    <Card sx={{ 
+                      p: 4,
+                      border: '1px solid #DBDBE1',
+                      borderRadius: '14px',
+                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                      bgcolor: 'white',
+                      transition: 'all 0.3s ease',
+                      textAlign: 'left',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                      }
+                    }}>
+                      <Typography variant="h5" sx={{ 
+                        fontWeight: 'bold', 
+                        color: '#1f2937',
+                        mb: 2,
+                        fontSize: '1.5rem',
+                        textAlign: 'left'
+                      }}>
+                        E-commerce Plugins
+                      </Typography>
+                      <Typography variant="body1" sx={{ 
+                        color: '#6b7280',
+                        fontSize: '1rem',
+                        mb: 3,
+                        lineHeight: 1.6,
+                        textAlign: 'left'
+                      }}>
+                        Ready-to-use plugins for popular e-commerce platforms like Shopify, WooCommerce, and Magento.
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: '#8b5cf6',
+                          color: 'white',
+                          borderRadius: '25px',
+                          py: 1,
+                          px: 3,
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          boxShadow: 'none',
+                          alignSelf: 'flex-start',
+                          '&:hover': {
+                            backgroundColor: '#7c3aed',
+                            boxShadow: 'none'
+                          }
+                        }}
+                      >
+                        Browse Plugins
+                      </Button>
+                    </Card>
+                  </Box>
+                </Box>
+              </Fade>
+            </Box>
           </Box>
-          
-          <Button
-            onClick={handleLogout}
-            variant="outlined"
-            startIcon={<Logout size="20" />}
-            sx={{
-              borderColor: '#dc2626',
-              color: '#dc2626',
-              '&:hover': {
-                borderColor: '#b91c1c',
-                backgroundColor: '#fef2f2'
-              }
-            }}
-          >
-            Logout
-          </Button>
         </Box>
-
-        {/* User Info Card */}
-        <Card sx={{ 
-          p: 3, 
-          mb: 3,
-          border: '1px solid #e5e7eb',
-          borderRadius: '14px',
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-          bgcolor: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
-          }
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Avatar sx={{ 
-              width: 64, 
-              height: 64, 
-              bgcolor: '#8b5cf6',
-              fontSize: '1.5rem',
-              fontWeight: 'bold',
-              mr: 3
-            }}>
-              {user?.email?.charAt(0).toUpperCase()}
-            </Avatar>
-            <Box>
-              <Typography variant="h6" sx={{ 
-                fontWeight: 600,
-                color: '#1f2937',
-                mb: 0.5
-              }}>
-                {user?.email}
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#6b7280' }}>
-                User ID: {user?.id}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Divider sx={{ mb: 3 }} />
-
-          <Stack spacing={2}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Shield color="#10b981" variant="Bold" size="20" style={{ marginRight: '12px' }} />
-              <Typography variant="body2" sx={{ color: '#10b981', fontWeight: 500 }}>
-                Multi-Factor Authentication Enabled
-              </Typography>
-            </Box>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <UserEdit color="#8b5cf6" variant="Bold" size="20" style={{ marginRight: '12px' }} />
-              <Typography variant="body2" sx={{ color: '#6b7280' }}>
-                Account verified and active
-              </Typography>
-            </Box>
-          </Stack>
-        </Card>
-
-        {/* Quick Actions */}
-        <Card sx={{ 
-          p: 3,
-          border: '1px solid #e5e7eb',
-          borderRadius: '14px',
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-          bgcolor: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
-          }
-        }}>
-          <Typography variant="h6" sx={{ 
-            fontWeight: 600,
-            color: '#1f2937',
-            mb: 3
-          }}>
-            Quick Actions
-          </Typography>
-          
-          <Stack spacing={2}>
-            <Button
-              variant="outlined"
-              fullWidth
-              sx={{
-                py: 1.5,
-                borderRadius: '12px',
-                borderColor: '#e5e7eb',
-                color: '#374151',
-                textTransform: 'none',
-                fontWeight: 500,
-                '&:hover': {
-                  borderColor: '#8b5cf6',
-                  backgroundColor: '#f3f4f6'
-                }
-              }}
-            >
-              View Profile Settings
-            </Button>
-            
-            <Button
-              variant="outlined"
-              fullWidth
-              sx={{
-                py: 1.5,
-                borderRadius: '12px',
-                borderColor: '#e5e7eb',
-                color: '#374151',
-                textTransform: 'none',
-                fontWeight: 500,
-                '&:hover': {
-                  borderColor: '#8b5cf6',
-                  backgroundColor: '#f3f4f6'
-                }
-              }}
-            >
-              Security Settings
-            </Button>
-            
-            <Button
-              variant="outlined"
-              fullWidth
-              sx={{
-                py: 1.5,
-                borderRadius: '12px',
-                borderColor: '#e5e7eb',
-                color: '#374151',
-                textTransform: 'none',
-                fontWeight: 500,
-                '&:hover': {
-                  borderColor: '#8b5cf6',
-                  backgroundColor: '#f3f4f6'
-                }
-              }}
-            >
-              Transaction History
-            </Button>
-          </Stack>
-        </Card>
       </Box>
-    </Box>
+    </DashboardLayout>
   );
 };
 

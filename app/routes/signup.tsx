@@ -266,7 +266,7 @@ const SignUp = () => {
             />
           </Box>
           
-          <AuthButton loading={loading}>
+          <AuthButton loading={loading} hasInputs={email.trim() !== '' && password.trim() !== ''}>
             Create Account
           </AuthButton>
         </Stack>
