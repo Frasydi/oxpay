@@ -15,7 +15,7 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<void>;
     socialLogin: (loginMethod: () => Promise<any>) => Promise<void>;
     logout: () => void;
-    checkAuth: () => Promise<void>;
+    checkAuth: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,16 +58,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     const parsedUser = JSON.parse(userData);
                     setUser(parsedUser);
                     setIsAuthenticated(true);
+                    return true; // Return auth status
                 } else {
                     // Token is invalid, clear storage
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('user');
                     setUser(null);
                     setIsAuthenticated(false);
+                    return false;
                 }
             } else {
                 setUser(null);
                 setIsAuthenticated(false);
+                return false;
             }
         } catch (error) {
             console.error('Auth check failed:', error);
@@ -76,6 +79,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             localStorage.removeItem('user');
             setUser(null);
             setIsAuthenticated(false);
+            return false;
         } finally {
             setIsLoading(false);
         }
@@ -120,12 +124,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Initial auth check and redirect only on app start
     useEffect(() => {
         const performInitialCheck = async () => {
-            await checkAuth();
+            const authStatus = await checkAuth();
             
             // Only redirect on initial load, not on page changes
             const currentPath = location.pathname;
             
-            if (isAuthenticated) {
+            if (authStatus) {
                 // User is authenticated
                 if (publicRoutes.includes(currentPath)) {
                     // Redirect authenticated users away from auth pages
