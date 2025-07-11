@@ -11,5 +11,6 @@ export default [
   route("/otp-mfa", "routes/otp-mfa.tsx"),
   route("/dashboard", "routes/dashboard.tsx"),
   route("/transactions", "routes/transactions.tsx"),
-  route("/reports", "routes/reports.tsx")
+  route("/reports", "routes/reports.tsx"),
+  route("/profile", "routes/profile.tsx")
 ] satisfies RouteConfig;

@@ -1,33 +1,42 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  Card
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
 
 const StorePaymentsTab: React.FC = () => {
   return (
     <Box sx={{
       display: 'flex',
       flexDirection: 'column',
-      gap: 1
+      gap: 1,
+      width: '100%',
+      maxWidth: '100%',
+      overflow: 'hidden'
     }}>
       {/* First Row - In Store and Virtual Payment Terminals */}
       <Box sx={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-        gap: 4
+        gridTemplateColumns: {
+          xs: '1fr',
+          sm: 'repeat(auto-fit, minmax(300px, 1fr))'
+        },
+        gap: { xs: 2, sm: 4 },
+        width: '100%'
       }}>
         {/* In Store Payment Terminal Card */}
         <Card sx={{
-          p: 4,
+          p: { xs: 2, sm: 4 },
           borderRadius: '14px',
           bgcolor: 'white',
           transition: 'all 0.3s ease',
-          minHeight: '200px',
+          minHeight: { xs: '180px', sm: '200px' },
           display: 'flex',
           flexDirection: 'column',
+          width: '100%',
+          maxWidth: '100%',
+          overflow: 'hidden',
+          boxSizing: 'border-box',
           '&:hover': {
             transform: 'translateY(-2px)'
           }
@@ -36,14 +45,14 @@ const StorePaymentsTab: React.FC = () => {
             fontWeight: 'bold',
             color: '#1f2937',
             mb: 2,
-            fontSize: '1.5rem',
+            fontSize: { xs: '1.25rem', sm: '1.5rem' },
             textAlign: 'left'
           }}>
             In Store Payment Terminal
           </Typography>
           <Typography variant="body1" sx={{
             color: '#6b7280',
-            fontSize: '1rem',
+            fontSize: { xs: '0.875rem', sm: '1rem' },
             mb: 3,
             lineHeight: 1.6,
             textAlign: 'left'
@@ -162,7 +171,8 @@ const StorePaymentsTab: React.FC = () => {
             {/* Image */}
             <Box sx={{
               flex: 0.35,
-              minWidth: { xs: '100%', md: '280px' },
+              minWidth: { xs: '100%', md: '250px' },
+              maxWidth: { xs: '100%', md: '280px' },
               borderRadius: '12px',
               overflow: 'hidden',
               display: 'flex',
@@ -291,7 +301,8 @@ const StorePaymentsTab: React.FC = () => {
             {/* Image */}
             <Box sx={{
               flex: 0.35,
-              minWidth: { xs: '100%', md: '230px' },
+              minWidth: { xs: '100%', md: '200px' },
+              maxWidth: { xs: '100%', md: '230px' },
               borderRadius: '12px',
               overflow: 'hidden',
               order: { xs: 1, md: 2 },
@@ -336,8 +347,9 @@ const StorePaymentsTab: React.FC = () => {
             {/* Image */}
             <Box sx={{
               flex: 0.35,
-              minWidth: { xs: '100%', md: '230px' },
-              height: '400px',
+              minWidth: { xs: '100%', md: '200px' },
+              maxWidth: { xs: '100%', md: '230px' },
+              height: { xs: '300px', md: '400px' },
               borderRadius: '12px',
               overflow: 'hidden',
               display: 'flex',

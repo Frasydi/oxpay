@@ -1,5 +1,22 @@
 import React, { useState } from 'react';
-import { Box, Typography, Card, CardContent, IconButton, Menu, MenuItem, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, TextField, InputAdornment } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import { LineChart, Line, XAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 import { BarChartSharp, Info, FileDownload, ArrowUpward, ArrowDownward, MoreHoriz, Add, Search } from '@mui/icons-material';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
@@ -244,13 +261,15 @@ export default function TransactionsPage() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1,
-                    px: 2,
+                    px: { xs: 1, sm: 2 },
                     py: 1,
                     backgroundColor: 'white',
                     border: isActive ? '1px solid #A44DE3' : '1px dashed #CCCCCC',
                     borderRadius: '12px',
                     cursor: 'pointer',
                     transition: 'border 0.2s ease-in-out',
+                    minWidth: 'fit-content',
+                    maxWidth: '100%',
                     '&:hover': {
                         borderColor: '#A44DE3'
                     }
@@ -278,7 +297,8 @@ export default function TransactionsPage() {
                 <Typography variant="body2" sx={{ 
                     color: isActive ? '#A44DE3' : '#666',
                     fontWeight: isActive ? 500 : 400,
-                    fontSize: '14px'
+                    fontSize: { xs: '12px', sm: '14px' },
+                    whiteSpace: 'nowrap'
                 }}>
                     {label}
                 </Typography>
@@ -288,23 +308,65 @@ export default function TransactionsPage() {
 
     return (
         <DashboardLayout>
-            <Box sx={{ p: 3 }}>
-                <Card sx={{ mb: 3, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'relative' }}>
-                    <CardContent sx={{ p: 3 }}>
-                        {/* Card Header - Absolute positioned */}
+            <Box sx={{ 
+                p: { xs: 1, sm: 3 }, 
+                width: '100%', 
+                maxWidth: '100vw', 
+                boxSizing: 'border-box', 
+                overflowX: 'hidden',
+                // Custom scrollbar styling
+                '& ::-webkit-scrollbar': {
+                    width: '6px',
+                    height: '6px',
+                },
+                '& ::-webkit-scrollbar-track': {
+                    background: '#f1f1f1',
+                    borderRadius: '10px',
+                },
+                '& ::-webkit-scrollbar-thumb': {
+                    background: '#c1c1c1',
+                    borderRadius: '10px',
+                    '&:hover': {
+                        background: '#a8a8a8',
+                    }
+                },
+                '& ::-webkit-scrollbar-thumb:active': {
+                    background: '#888',
+                }
+            }}>
+                <Card sx={{ 
+                    mb: { xs: 2, sm: 3 }, 
+                    borderRadius: 2, 
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)', 
+                    position: 'relative',
+                    width: '100%',
+                    maxWidth: '100%'
+                }}>
+                    <CardContent sx={{ 
+                        p: { xs: 1, sm: 3 },
+                        width: '100%',
+                        maxWidth: '100%'
+                    }}>
+                        {/* Card Header */}
                         <Box sx={{ 
-                            position: 'absolute',
-                            top: 24,
-                            left: 24,
-                            right: 24,
+                            position: { xs: 'static', sm: 'absolute' },
+                            top: { sm: 24 },
+                            left: { sm: 24 },
+                            right: { sm: 24 },
                             display: 'flex', 
                             alignItems: 'center', 
                             justifyContent: 'space-between',
-                            zIndex: 10
+                            zIndex: 10,
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            gap: { xs: 2, sm: 0 },
+                            width: { xs: '100%', sm: 'calc(100% - 48px)' },
+                            maxWidth: { xs: '100%', sm: 'calc(100% - 48px)' },
+                            mb: { xs: 3, sm: 0 },
+                            px: { xs: 0, sm: 0 }
                         }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <BarChartSharp sx={{ color: 'black', fontSize: 24 }} />
-                                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                <BarChartSharp sx={{ color: 'black', fontSize: { xs: 20, sm: 24 } }} />
+                                <Typography variant="h6" sx={{ fontWeight: 600, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                                     Transactions Graph
                                 </Typography>
                                 <IconButton size="small" sx={{ color: 'text.secondary' }}>
@@ -313,7 +375,7 @@ export default function TransactionsPage() {
                             </Box>
                             
                             {/* Graph Dropdowns */}
-                            <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Box sx={{ display: 'flex', gap: 1, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
                                 {/* Currency Dropdown */}
                                 <Box sx={{
                                     display: 'flex',
@@ -432,21 +494,30 @@ export default function TransactionsPage() {
                         
                         {/* Amount Display - Below Header */}
                         <Box sx={{ 
-                            position: 'absolute',
-                            top: 60,
-                            left: 24,
-                            zIndex: 10
+                            position: { xs: 'static', sm: 'absolute' },
+                            top: { sm: 60 },
+                            left: { sm: 24 },
+                            zIndex: 10,
+                            mt: { xs: 0, sm: 0 },
+                            mb: { xs: 2, sm: 0 },
+                            px: { xs: 0, sm: 0 }
                         }}>
-                            <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: 12 }}>
+                            <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: { xs: 10, sm: 12 } }}>
                                 Amount
                             </Typography>
-                            <Typography variant="h3" sx={{ fontWeight: 600, mt: 0.5 }}>
+                            <Typography variant="h3" sx={{ fontWeight: 600, mt: 0.5, fontSize: { xs: '1.5rem', sm: '3rem' } }}>
                                 SGD {totalAmount.toLocaleString()}
                             </Typography>
                         </Box>
                         
                         {/* Line Chart */}
-                        <Box sx={{ width: '100%', height: 300, mt: 6 }}>
+                        <Box sx={{ 
+                            width: '100%', 
+                            height: { xs: 280, sm: 320 }, 
+                            mt: { xs: 2, sm: 10 },
+                            pt: { xs: 2, sm: 3 },
+                            maxWidth: '100%'
+                        }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={transactionData} margin={{ top: 50, right: 50, left: 50, bottom: 5 }}>
                                     <defs>
@@ -484,14 +555,27 @@ export default function TransactionsPage() {
                 </Card>
                 
                 {/* Transactions Summary */}
-                <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                    <CardContent sx={{ p: 3 }}>
+                <Card sx={{ 
+                    borderRadius: 2, 
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    width: '100%',
+                    maxWidth: '100%'
+                }}>
+                    <CardContent sx={{ 
+                        p: { xs: 1, sm: 3 },
+                        width: '100%',
+                        maxWidth: '100%'
+                    }}>
                         {/* Header with Dropdown */}
                         <Box sx={{ 
                             display: 'flex', 
                             alignItems: 'center', 
                             justifyContent: 'space-between',
-                            mb: 3
+                            mb: 3,
+                            flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                            gap: { xs: 2, sm: 0 },
+                            width: '100%',
+                            maxWidth: '100%'
                         }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Box sx={{ 
@@ -572,7 +656,16 @@ export default function TransactionsPage() {
                         </Box>
 
                         {/* Summary Cards */}
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+                        <Box sx={{ 
+                            display: 'grid', 
+                            gridTemplateColumns: { 
+                                xs: '1fr', 
+                                sm: 'repeat(3, 1fr)' 
+                            }, 
+                            gap: 2,
+                            width: '100%',
+                            maxWidth: '100%'
+                        }}>
                             {/* Daily Sales */}
                             <Box sx={{ 
                                 p: 2, 
@@ -658,14 +751,28 @@ export default function TransactionsPage() {
                 </Card>
                 
                 {/* Transactions Table */}
-                <Card sx={{ mt : 4, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                    <CardContent sx={{ p: 3 }}>
+                <Card sx={{ 
+                    mt : 4, 
+                    borderRadius: 2, 
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    width: '100%',
+                    maxWidth: '100%'
+                }}>
+                    <CardContent sx={{ 
+                        p: { xs: 1, sm: 3 },
+                        width: '100%',
+                        maxWidth: '100%'
+                    }}>
                         {/* Header with Action Buttons */}
                         <Box sx={{ 
                             display: 'flex', 
                             alignItems: 'center', 
                             justifyContent: 'space-between',
-                            mb: 3
+                            mb: 3,
+                            flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                            gap: { xs: 2, sm: 1 },
+                            width: '100%',
+                            maxWidth: '100%'
                         }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Box sx={{ 
@@ -689,7 +796,12 @@ export default function TransactionsPage() {
                             </Box>
                             
                             {/* Action Buttons */}
-                            <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Box sx={{ 
+                                display: 'flex', 
+                                gap: 1,
+                                flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                                width: { xs: '100%', sm: 'auto' }
+                            }}>
                                 <Button
                                     variant="outlined"
                                     startIcon={<FileDownload />}
@@ -698,7 +810,9 @@ export default function TransactionsPage() {
                                         color: '#333',
                                         textTransform: 'none',
                                         borderRadius: 1,
-                                        fontSize: '14px',
+                                        fontSize: { xs: '12px', sm: '14px' },
+                                        px: { xs: 1, sm: 2 },
+                                        width: { xs: '100%', sm: 'auto' },
                                         '&:hover': {
                                             borderColor: '#A44DE3',
                                             backgroundColor: 'rgba(164, 77, 227, 0.04)'
@@ -714,7 +828,9 @@ export default function TransactionsPage() {
                                         color: '#333',
                                         textTransform: 'none',
                                         borderRadius: 1,
-                                        fontSize: '14px',
+                                        fontSize: { xs: '12px', sm: '14px' },
+                                        px: { xs: 1, sm: 2 },
+                                        width: { xs: '100%', sm: 'auto' },
                                         '&:hover': {
                                             borderColor: '#A44DE3',
                                             backgroundColor: 'rgba(164, 77, 227, 0.04)'
@@ -727,7 +843,17 @@ export default function TransactionsPage() {
                         </Box>
 
                         {/* Status Cards */}
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
+                        <Box sx={{ 
+                            display: 'grid', 
+                            gridTemplateColumns: { 
+                                xs: '1fr', 
+                                sm: 'repeat(2, 1fr)', 
+                                md: 'repeat(4, 1fr)' 
+                            }, 
+                            gap: 2,
+                            width: '100%',
+                            maxWidth: '100%'
+                        }}>
                             {/* Success */}
                             <Box sx={{ 
                                 p: 2, 
@@ -843,10 +969,22 @@ export default function TransactionsPage() {
                             alignItems: 'center', 
                             justifyContent: 'space-between',
                             mb: 3,
-                            gap: 2
+                            gap: 2,
+                            flexWrap: 'wrap',
+                            width: '100%',
+                            maxWidth: '100%'
                         }}>
                             {/* Filter Badges */}
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt : 2,flexWrap: 'wrap', flex: 1 }}>
+                            <Box sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: 1, 
+                                mt : 2,
+                                flexWrap: 'wrap', 
+                                flex: 1,
+                                width: '100%',
+                                maxWidth: '100%'
+                            }}>
                                 {filterOptions.map((filter) => (
                                     <FilterBadge key={filter} label={filter} />
                                 ))}
@@ -867,7 +1005,9 @@ export default function TransactionsPage() {
                                     ),
                                 }}
                                 sx={{
-                                    minWidth: 250,
+                                    minWidth: { xs: '200px', sm: '250px' },
+                                    width: { xs: '100%', sm: 'auto' },
+                                    maxWidth: '100%',
                                     '& .MuiOutlinedInput-root': {
                                         borderRadius: '12px',
                                         backgroundColor: 'white',
@@ -894,9 +1034,41 @@ export default function TransactionsPage() {
                         </Box>
 
                         {/* Transactions Table */}
-                        <Box sx={{ mt: 3 }}>
-                            <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #EEEEF2', borderRadius: 2 }}>
-                                <Table>
+                        <Box sx={{ 
+                            mt: 3,
+                            width: '100%',
+                            maxWidth: '100%',
+                            overflowX: 'auto',
+                            // Enhanced scrollbar styling for table
+                            '&::-webkit-scrollbar': {
+                                height: '8px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                background: 'rgba(0,0,0,0.05)',
+                                borderRadius: '12px',
+                                margin: '0 10px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                background: 'linear-gradient(45deg, #A44DE3, #7E01D7)',
+                                borderRadius: '12px',
+                                border: '2px solid transparent',
+                                backgroundClip: 'padding-box',
+                                '&:hover': {
+                                    background: 'linear-gradient(45deg, #9239D1, #6B00C7)',
+                                }
+                            },
+                            '&::-webkit-scrollbar-corner': {
+                                background: 'transparent',
+                            }
+                        }}>
+                            <TableContainer component={Paper} sx={{ 
+                                boxShadow: 'none', 
+                                border: '1px solid #EEEEF2', 
+                                borderRadius: 2,
+                                width: '100%',
+                                maxWidth: '100%'
+                            }}>
+                            <Table sx={{ minWidth: { xs: 600, sm: 'auto' } }}>
                                     <TableHead>
                                         <TableRow sx={{ backgroundColor: '#F8F9FA' }}>
                                             {[

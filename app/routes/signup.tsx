@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  Box, 
-  Typography, 
-  TextField, 
-  Button, 
-  Divider, 
-  Stack, 
-  Link,
-  Alert,
-  CircularProgress
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';
 import AuthButton from '~/components/auth/AuthButton';

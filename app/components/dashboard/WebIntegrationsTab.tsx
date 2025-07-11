@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-    Box,
-    Typography,
-    Button,
-    Card
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
 
 const WebIntegrationsTab: React.FC = () => {
     // Plugin data array for easy editing
@@ -35,7 +33,10 @@ const WebIntegrationsTab: React.FC = () => {
         <Box sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 3
+            gap: 3,
+            width: '100%',
+            maxWidth: '100%',
+            overflow: 'hidden'
         }}>
             {/* API Documentation Card - Even Layout (Text + Image) */}
             <Card sx={{
@@ -45,6 +46,9 @@ const WebIntegrationsTab: React.FC = () => {
                 boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                 transition: 'all 0.3s ease',
                 width: '100%',
+                maxWidth: '100%',
+                overflow: 'hidden',
+                boxSizing: 'border-box',
                 '&:hover': {
                     transform: 'translateY(-2px)'
                 },

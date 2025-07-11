@@ -1,16 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { 
-  Box, 
-  Typography, 
-  Stack, 
-  Alert,
-  Card,
-  IconButton,
-  Button,
-  CircularProgress,
-  TextField
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
+import Card from '@mui/material/Card';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
 import { ArrowLeft2 } from 'iconsax-react';
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';

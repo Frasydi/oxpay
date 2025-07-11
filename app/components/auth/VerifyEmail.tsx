@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { 
-  Box, 
-  Typography, 
-  TextField, 
-  Stack, 
-  Link,
-  Alert,
-  Card,
-  IconButton
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
+import Card from '@mui/material/Card';
+import IconButton from '@mui/material/IconButton';
 import { ArrowBack, Email, Lock } from '@mui/icons-material';
 import AuthLayout from './AuthLayout';
 import AuthButton from './AuthButton';

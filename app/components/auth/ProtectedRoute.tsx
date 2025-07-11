@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Box, CircularProgress } from '@mui/material';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import authService from '~/services/AuthService';
 
 interface ProtectedRouteProps {

@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  Card,
-  Stack,
-  Avatar,
-  Divider,
-  Fade
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import Fade from '@mui/material/Fade';
 import { Logout, UserEdit, Shield, TickCircle, User, Sms, SecurityUser, MoneyChange } from 'iconsax-react';
 import { useAuth } from '~/contexts/AuthContext';
 import DashboardLayout from '~/components/dashboard/DashboardLayout';
@@ -108,26 +106,33 @@ const Dashboard: React.FC = () => {
   return (
     <DashboardLayout>
       <Box sx={{
-        p: 3
+        p: { xs: 0.5, sm: 3 },
+        width: '100%',
+        maxWidth: '100vw',
+        overflow: 'hidden',
+        boxSizing: 'border-box'
       }}>
         <Box sx={{
-          maxWidth: '1200px',
-          mx: 'auto'
+          maxWidth: { xs: '100%', sm: '1200px' },
+          mx: 'auto',
+          width: '100%',
+          px: { xs: 0.5, sm: 0 },
+          boxSizing: 'border-box'
         }}>
           {/* Welcome Section */}
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: { xs: 3, sm: 4 } }}>
             <Typography variant="h3" sx={{
               fontWeight: 'bold',
               color: '#1f2937',
               fontFamily: '"IBM Plex Sans", sans-serif',
-              fontSize: '2.5rem',
-              mb: 2
+              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.5rem' },
+              mb: { xs: 1, sm: 2 }
             }}>
               Welcome {user?.email?.split('@')[0]}!
             </Typography>
             <Typography variant="body1" sx={{
               color: '#6b7280',
-              fontSize: '1.125rem'
+              fontSize: { xs: '1rem', sm: '1.125rem' }
             }}>
               Get started with Productboard by completing the following tasks.
             </Typography>
@@ -139,10 +144,11 @@ const Dashboard: React.FC = () => {
             gridTemplateColumns: {
               xs: '1fr',
               sm: 'repeat(2, 1fr)',
-              md: 'repeat(4, 1fr)'
+              lg: 'repeat(4, 1fr)'
             },
-            gap: '2%',
-            mb: 4
+            gap: { xs: 1, sm: 2 },
+            mb: { xs: 3, sm: 4 },
+            width: '100%'
           }}>
             {progressSteps.map((step, index) => {
               const colors = getCardColors(step.status);
@@ -150,14 +156,18 @@ const Dashboard: React.FC = () => {
 
               return (
                 <Card key={step.name} sx={{
-                  px: '4%',
-                  py: '3%',
-                  minHeight: '8.75rem',
+                  px: { xs: 1, sm: 3 },
+                  py: { xs: 1.5, sm: 2.5 },
+                  minHeight: { xs: '6rem', sm: '8.75rem' },
                   border: `0.125rem solid ${colors.borderColor}`,
                   borderRadius: '0.875rem',
                   boxShadow: 'none',
                   bgcolor: 'white',
                   transition: 'all 0.3s ease',
+                  width: '100%',
+                  maxWidth: '100%',
+                  overflow: 'hidden',
+                  boxSizing: 'border-box',
                   // Add animation for current status
                   ...(step.status === 'current' && {
                     animation: 'pulse 2s ease-in-out infinite',
@@ -177,7 +187,7 @@ const Dashboard: React.FC = () => {
                     }
                   }),
                   '&:hover': {
-                    transform: 'translateY(-0.125rem)',
+                    transform: { xs: 'none', sm: 'translateY(-0.125rem)' },
                     borderColor: colors.borderColor,
                     opacity: 0.8,
                     // Pause animation on hover for current status
@@ -191,33 +201,36 @@ const Dashboard: React.FC = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'flex-start',
-                    mb: '1rem'
+                    mb: { xs: '0.5rem', sm: '1rem' },
+                    width: '100%'
                   }}>
                     <Box sx={{
-                      width: '2rem',
-                      height: '2rem',
+                      width: { xs: '1.5rem', sm: '2rem' },
+                      height: { xs: '1.5rem', sm: '2rem' },
                       borderRadius: '50%',
                       backgroundColor: colors.iconBg,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      flexShrink: 0
                     }}>
-                      <IconComponent size="1.25rem" color={colors.iconColor} />
+                      <IconComponent size={{ xs: '0.875rem', sm: '1.25rem' }} color={colors.iconColor} />
                     </Box>
 
                     <Box sx={{
-                      width: '1rem',
-                      height: '1rem',
+                      width: { xs: '0.75rem', sm: '1rem' },
+                      height: { xs: '0.75rem', sm: '1rem' },
                       borderRadius: '50%',
                       border: step.status === 'success' ? `0.0625rem solid #374151` : `0.0625rem solid #e5e7eb`,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      flexShrink: 0
                     }}>
                       {step.status === 'success' && (
                         <Box sx={{
-                          width: '0.75rem',
-                          height: '0.75rem',
+                          width: { xs: '0.5rem', sm: '0.75rem' },
+                          height: { xs: '0.5rem', sm: '0.75rem' },
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center'
@@ -243,19 +256,25 @@ const Dashboard: React.FC = () => {
                   </Box>
 
                   {/* Progress info */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: '0.75rem' }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    mb: { xs: '0.5rem', sm: '0.75rem' },
+                    width: '100%' 
+                  }}>
                     <Box sx={{
-                      width: '1.25rem',
-                      height: '1.25rem',
+                      width: { xs: '0.875rem', sm: '1.25rem' },
+                      height: { xs: '0.875rem', sm: '1.25rem' },
                       borderRadius: '50%',
                       backgroundColor: colors.bgColor,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      mr: '0.5rem'
+                      mr: '0.5rem',
+                      flexShrink: 0
                     }}>
                       <Typography sx={{
-                        fontSize: '0.625rem',
+                        fontSize: { xs: '0.4rem', sm: '0.625rem' },
                         fontWeight: 600,
                         color: colors.textColor
                       }}>
@@ -265,7 +284,12 @@ const Dashboard: React.FC = () => {
                     <Typography variant="h6" sx={{
                       fontWeight: 600,
                       color: '#1f2937',
-                      fontSize: '0.75rem'
+                      fontSize: { xs: '0.625rem', sm: '0.875rem' },
+                      flex: 1,
+                      textAlign: 'left',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
                     }}>
                       {step.name}
                     </Typography>
@@ -309,15 +333,21 @@ const Dashboard: React.FC = () => {
                       </Box>
                     ) : null}
                     sx={{
-                      py: '0.25rem',
-                      px: '0.75rem',
+                      py: { xs: '0.375rem', sm: '0.25rem' },
+                      px: { xs: '0.25rem', sm: '0.75rem' },
                       borderRadius: '1rem',
                       backgroundColor: colors.buttonBgColor || colors.bgColor,
                       color: colors.buttonTextColor || colors.textColor,
                       textTransform: 'none',
                       fontWeight: 600,
-                      fontSize: '0.75rem',
+                      fontSize: { xs: '0.5rem', sm: '0.75rem' },
                       boxShadow: 'none',
+                      minHeight: { xs: '1.5rem', sm: 'auto' },
+                      width: '100%',
+                      maxWidth: '100%',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
                       '&:hover': {
                         backgroundColor: colors.buttonBgColor || colors.bgColor,
                         opacity: 0.9,
@@ -333,21 +363,29 @@ const Dashboard: React.FC = () => {
           </Box>
 
           {/* Explore Products Section */}
-          <Box sx={{ mb: 4, mt: 12, textAlign: 'center' }}>
+          <Box sx={{ 
+            mb: { xs: 3, sm: 4 }, 
+            mt: { xs: 6, sm: 12 }, 
+            textAlign: 'center',
+            width: '100%',
+            px: { xs: 0, sm: 0 }
+          }}>
             <Typography variant="h4" sx={{
               fontWeight: 'bold',
               color: '#1f2937',
               fontFamily: '"IBM Plex Sans", sans-serif',
-              fontSize: '1.75rem',
-              mb: 2
+              fontSize: { xs: '1.5rem', sm: '1.75rem' },
+              mb: { xs: 1, sm: 2 }
             }}>
               Explore our products!
             </Typography>
             <Typography variant="body1" sx={{
               color: '#6b7280',
-              fontSize: '1rem',
-              mb: 4,
-              width: '100%'
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              mb: { xs: 3, sm: 4 },
+              width: '100%',
+              maxWidth: '100%',
+              px: { xs: 0, sm: 0 }
             }}>
               Discover flexible payment solutions tailored for your business—whether in-store, online, or on the go.
             </Typography>
@@ -363,7 +401,11 @@ const Dashboard: React.FC = () => {
             />
 
             {/* Tab Content */}
-            <Box sx={{ mt: 6 }}>
+            <Box sx={{ 
+              mt: { xs: 3, sm: 6 },
+              width: '100%',
+              maxWidth: '100%'
+            }}>
               {/* Store Payments Tab Content */}
               <Fade in={selectedTab === 0} timeout={500}>
                 <Box sx={{ display: selectedTab === 0 ? 'block' : 'none' }}>

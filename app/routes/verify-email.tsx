@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { 
-  Box, 
-  Typography, 
-  TextField, 
-  Stack, 
-  Alert,
-  Card,
-  IconButton,
-  Button,
-  CircularProgress,
-  Link
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
+import Card from '@mui/material/Card';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Link from '@mui/material/Link';
 import { Sms, TickCircle, ArrowLeft2, Lock } from 'iconsax-react';
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';
