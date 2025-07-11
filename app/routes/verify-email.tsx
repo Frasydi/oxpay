@@ -270,12 +270,4 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ email: propEmail }) => {
   );
 };
 
-const ProtectedVerifyEmail = () => {
-  return (
-    <ProtectedRoute requireAuth={false}>
-      <VerifyEmail />
-    </ProtectedRoute>
-  );
-};
-
-export default ProtectedVerifyEmail;
+export default VerifyEmail;

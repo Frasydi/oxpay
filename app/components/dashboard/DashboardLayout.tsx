@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 import {
   Box,
   Typography,
@@ -24,6 +25,7 @@ import {
   Setting2,
   Notification,
   ArrowDown2,
+  ArrowRight2,
   MoneyRecive,
   Book1,
   MessageQuestion,
@@ -31,8 +33,12 @@ import {
   Activity,
   Shield,
   NotificationStatus,
-  Profile
+  Profile,
+  Clock,
+  MessageQuestion as FAQ,
+  Logout
 } from 'iconsax-react';
+import { useAuth } from '~/contexts/AuthContext';
 
 // Define color constants
 const colors = {
@@ -54,19 +60,45 @@ interface NavItem {
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
-  const [selectedItem, setSelectedItem] = useState('getting-started');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { logout } = useAuth()
+  const [selectedItem, setSelectedItem] = useState(() => {
+    // Determine initial selected item based on current path
+    const path = location.pathname;
+    if (path === '/dashboard') return 'getting-started';
+    if (path === '/transactions') return 'transactions';
+    if (path === '/reports') return 'reports';
+    return 'getting-started';
+  });
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     products: true,
-    settings: false
+    settings: false,
+    documentation: false
   });
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [notificationMenuAnchor, setNotificationMenuAnchor] = useState<null | HTMLElement>(null);
+
+  // Update selected item when location changes
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/dashboard') {
+      setSelectedItem('getting-started');
+    } else if (path === '/transactions') {
+      setSelectedItem('transactions');
+    } else if (path === '/reports') {
+      setSelectedItem('reports');
+    }
+  }, [location.pathname]);
 
   // Mock user data
   const user = {
     firstName: 'John',
     lastName: 'Doe',
-    email: 'john.doe@example.com'
+    fullName: 'John Doe',
+    username: '@johndoe',
+    email: 'john.doe@example.com',
+    lastLogin: '2 hours ago'
   };
 
   const navGroups = [
@@ -89,18 +121,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           label: 'Settings',
           iconComponent: Setting2,
           children: [
-            { label: 'Profile Settings', path: 'profile-settings', iconComponent: Profile },
-            { label: 'Security Settings', path: 'security-settings', iconComponent: Shield },
-            { label: 'Notification Settings', path: 'notification-settings', iconComponent: NotificationStatus }
+            { label: 'Profile', path: 'profile', iconComponent: Profile },
+            { label: 'API Keys', path: 'api-keys', iconComponent: Shield }
           ]
         },
         {
           label: 'Documentation',
           iconComponent: Book1,
           children: [
-            { label: 'API Documentation', path: 'api-docs', iconComponent: DocumentText },
-            { label: 'Integration Guide', path: 'integration-guide', iconComponent: Book1 },
-            { label: 'SDK Documentation', path: 'sdk-docs', iconComponent: DocumentText }
+            { label: 'API Specification', path: 'api-specification', iconComponent: DocumentText },
+            { label: 'Merchant Portal Manual', path: 'merchant-portal-manual', iconComponent: Book1 }
           ]
         },
         { label: 'Support', iconComponent: MessageQuestion, path: 'support' }
@@ -117,13 +147,20 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   const handleItemClick = (path: string) => {
     setSelectedItem(path);
+    // Navigate to the appropriate route
+    if (path === 'getting-started') {
+      navigate('/dashboard');
+    } else {
+      navigate(`/${path}`);
+    }
   };
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setUserMenuAnchor(event.currentTarget);
   };
 
-  const handleUserMenuClose = () => {
+  const handleUserMenuClose = async() => {
+    await logout()
     setUserMenuAnchor(null);
   };
 
@@ -144,7 +181,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => {
-              if (item.path) {
+              if (hasChildren) {
+                handleSectionToggle(item.label.toLowerCase());
+              } else if (item.path) {
                 handleItemClick(item.path);
               }
             }}
@@ -180,12 +219,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               }}
             />
             {hasChildren && (
-              <ArrowDown2 
+              <ArrowRight2 
                 size="16" 
                 style={{ 
-                  transform: openSections[item.label.toLowerCase()] ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transform: openSections[item.label.toLowerCase()] ? 'rotate(-90deg)' : 'rotate(90deg)',
                   transition: 'transform 0.2s ease'
                 }} 
+                color={colors.neutralDarker}
               />
             )}
           </ListItemButton>
@@ -229,7 +269,19 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         </Box>
 
         {/* Navigation */}
-        <Box sx={{ flex: 1, overflow: 'auto', py: 2 }}>
+        <Box sx={{ 
+          flex: 1, 
+          overflow: 'auto', 
+          py: 2,
+          // Hide scrollbar for webkit browsers
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          // Hide scrollbar for Firefox
+          scrollbarWidth: 'none',
+          // Ensure content is still scrollable
+          msOverflowStyle: 'none',
+        }}>
           {navGroups.map(group => (
             <Box key={group.key} sx={{ mb: 3 }}>
               <Typography
@@ -265,12 +317,48 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             height: 64,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-between',
             px: 3,
             gap: 2,
             zIndex: 1000
           }}
         >
+          {/* Left side - Logo market with merchant name */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2
+          }}>
+            <Shop 
+              size="20" 
+              color={colors.neutralDarker} 
+            />
+            <Typography
+              variant="body1"
+              sx={{
+                color: colors.neutralDarker,
+                fontWeight: 500,
+                fontSize: '0.875rem'
+              }}
+            >
+              Merchant Name
+            </Typography>
+            <Box
+              sx={{
+                color: colors.neutralDarker,
+                fontSize: '12px'
+              }}
+            >
+              ▴
+            </Box>
+          </Box>
+
+          {/* Right side - Notifications and user menu */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2
+          }}>
           {/* Notification */}
           <Badge badgeContent={3} color="error">
             <Card 
@@ -347,16 +435,32 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <Box
               sx={{
                 p: 0.5,
-                color: colors.neutralDarker
+                color: colors.neutralDarker,
+                transform: Boolean(userMenuAnchor) ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease'
               }}
             >
               <span style={{ fontSize: '14px' }}>▾</span>
             </Box>
           </Box>
+          </Box>
         </Box>
 
         {/* Content Area */}
-        <Box sx={{ flex: 1, overflow: 'auto', backgroundColor: 'white', pt: '64px' }}>
+        <Box sx={{ 
+          flex: 1, 
+          overflow: 'auto', 
+          backgroundColor: 'white', 
+          pt: '64px',
+          // Hide scrollbar for webkit browsers
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          // Hide scrollbar for Firefox
+          scrollbarWidth: 'none',
+          // Ensure content is still scrollable
+          msOverflowStyle: 'none',
+        }}>
           {children}
         </Box>
       </Box>
@@ -374,11 +478,136 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           vertical: 'top',
           horizontal: 'right'
         }}
+        PaperProps={{
+          sx: { 
+            width: 280,
+            p: 0,
+            mt: 1,
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+          }
+        }}
       >
-        <MenuItem onClick={handleUserMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleUserMenuClose}>Settings</MenuItem>
-        <Divider />
-        <MenuItem onClick={handleUserMenuClose}>Logout</MenuItem>
+        {/* User Info Section */}
+        <Box sx={{ p: 3, pb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Avatar
+              sx={{
+                width: 48,
+                height: 48,
+                backgroundColor: '#F2E5FB',
+                border: `2px solid ${colors.electricVioletLight}`,
+                color: colors.electricViolet,
+                fontSize: '1.125rem',
+                fontWeight: 600
+              }}
+            >
+              {user.firstName.charAt(0)}
+            </Avatar>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="body1" sx={{
+                fontWeight: 600,
+                color: '#1f2937',
+                fontSize: '0.875rem',
+                lineHeight: 1.2
+              }}>
+                {user.fullName}
+              </Typography>
+              <Typography variant="body2" sx={{
+                color: '#6b7280',
+                fontSize: '0.75rem',
+                lineHeight: 1.2,
+                mt: 0.5
+              }}>
+                {user.username}
+              </Typography>
+              <Typography variant="caption" sx={{
+                color: '#9ca3af',
+                fontSize: '0.6875rem',
+                fontFamily :"Open Sans",
+                lineHeight: 1.2,
+                mt: 0.55,
+                display: 'block'
+              }}>
+                Last login: {user.lastLogin}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Divider */}
+        <Divider sx={{ mx: 3, my: 1 }} />
+
+        {/* Menu Items */}
+        <Box sx={{ pb: 1 }}>
+          <MenuItem 
+            onClick={handleUserMenuClose}
+            sx={{ 
+              pl: 3, 
+              pr: 2,
+              py: 1.5,
+              '&:hover': {
+                backgroundColor: colors.electricVioletLightest
+              }
+            }}
+          >
+            <Profile size="18" color="#6b7280" style={{ marginRight: '12px' }} />
+            <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#374151' }}>
+              Profile
+            </Typography>
+          </MenuItem>
+          
+          <MenuItem 
+            onClick={handleUserMenuClose}
+            sx={{ 
+              pl: 3, 
+              pr: 2,
+              py: 1.5,
+              '&:hover': {
+                backgroundColor: colors.electricVioletLightest
+              }
+            }}
+          >
+            <Clock size="18" color="#6b7280" style={{ marginRight: '12px' }} />
+            <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#374151' }}>
+              History
+            </Typography>
+          </MenuItem>
+          
+          <MenuItem 
+            onClick={handleUserMenuClose}
+            sx={{ 
+              pl: 3, 
+              pr: 2,
+              py: 1.5,
+              '&:hover': {
+                backgroundColor: colors.electricVioletLightest
+              }
+            }}
+          >
+            <FAQ size="18" color="#6b7280" style={{ marginRight: '12px' }} />
+            <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#374151' }}>
+              FAQ
+            </Typography>
+          </MenuItem>
+          
+          <MenuItem 
+            onClick={handleUserMenuClose}
+            sx={{ 
+              pl: 3, 
+              pr: 2,
+              py: 1.5,
+              '&:hover': {
+                backgroundColor: '#fef2f2'
+              }
+            }}
+          >
+            <Logout size="18" color="#dc2626" style={{ marginRight: '12px' }} />
+            <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#dc2626' }}>
+              Sign Out
+            </Typography>
+          </MenuItem>
+        </Box>
       </Menu>
 
       {/* Notification Menu */}

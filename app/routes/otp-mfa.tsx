@@ -220,12 +220,4 @@ const OTPMFA: React.FC<OTPMFAProps> = ({ email: propEmail }) => {
   );
 };
 
-const ProtectedOTPMFA = () => {
-  return (
-    <ProtectedRoute requireAuth={false}>
-      <OTPMFA />
-    </ProtectedRoute>
-  );
-};
-
-export default ProtectedOTPMFA;
+export default OTPMFA;

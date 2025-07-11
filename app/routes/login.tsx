@@ -10,6 +10,7 @@ import {
   Alert,
   CircularProgress
 } from '@mui/material';
+import { Link as RouterLink } from 'react-router';
 import { useAuth } from '~/contexts/AuthContext';
 import authService from '~/services/AuthService';
 import AuthLayout from '~/components/auth/AuthLayout';
@@ -234,7 +235,8 @@ const Login = () => {
             />
             <Box sx={{ textAlign: 'right', mt: 1 }}>
               <Link 
-                href="#" 
+                component={RouterLink}
+                to="/forgot-password"
                 sx={{ 
                   color: '#666', 
                   textDecoration: 'none',

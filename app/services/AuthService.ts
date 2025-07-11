@@ -225,6 +225,28 @@ class AuthService {
     };
   }
 
+  // Forgot password
+  async forgotPassword(email: string): Promise<AuthResponse> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Check if user exists
+    const user = this.users.find((u: StoredUser) => u.email === email);
+    if (user) {
+      return {
+        success: true,
+        message: 'Password reset email sent successfully'
+      };
+    } else {
+      // For security reasons, we still return success even if user doesn't exist
+      // This prevents email enumeration attacks
+      return {
+        success: true,
+        message: 'Password reset email sent successfully'
+      };
+    }
+  }
+
   // Validate token
   async validateToken(token: string): Promise<boolean> {
     // Simulate API delay

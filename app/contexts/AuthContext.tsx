@@ -40,10 +40,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const location = useLocation();
 
     // Public routes that don't require authentication
-    const publicRoutes = ['/login', '/signup', '/verify-email', '/activate-2fa', '/activate-mfa', '/otp-mfa'];
+    const publicRoutes = ['/login', '/signup'];
 
     // Routes that require authentication
-    const protectedRoutes = ['/dashboard'];
+    const protectedRoutes = ['/dashboard', '/verify-email', '/activate-2fa', '/activate-mfa', '/otp-mfa'];
 
     const checkAuth = async () => {
         try {

@@ -314,12 +314,4 @@ const Activate2FA: React.FC<Activate2FAProps> = ({ email: propEmail }) => {
   );
 };
 
-const ProtectedActivate2FA = () => {
-  return (
-    <ProtectedRoute requireAuth={false}>
-      <Activate2FA />
-    </ProtectedRoute>
-  );
-};
-
-export default ProtectedActivate2FA;
+export default Activate2FA;

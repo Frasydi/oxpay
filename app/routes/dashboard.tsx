@@ -13,13 +13,23 @@ import { Logout, UserEdit, Shield, TickCircle, User, Sms, SecurityUser, MoneyCha
 import { useAuth } from '~/contexts/AuthContext';
 import DashboardLayout from '~/components/dashboard/DashboardLayout';
 import PillTabs from '~/components/dashboard/PillTabs';
+import StorePaymentsTab from '~/components/dashboard/StorePaymentsTab';
+import WebIntegrationsTab from '~/components/dashboard/WebIntegrationsTab';
+import { useNavigate } from 'react-router';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
 
   // Progress data
-  const progressSteps = [
+  const progressSteps : {
+    name: string;
+    buttonText: string;
+    icon: React.ElementType;
+    status: 'success' | 'current' | 'upcoming';
+    onPress? : () => void;
+  }[] = [
     {
       name: 'Sign up',
       buttonText: 'Sign Up',
@@ -30,19 +40,28 @@ const Dashboard: React.FC = () => {
       name: 'Verify email',
       buttonText: 'Proceed to activate',
       icon: Sms,
-      status: 'current' // current progress
+      status: 'current', // current progress
+      onPress : () => {
+        navigate('/verify-email'); // Navigate to email verification page
+      }
     },
     {
       name: 'KYC check',
       buttonText: 'Verify',
       icon: SecurityUser,
-      status: 'upcoming' // upcoming
+      status: 'upcoming', // upcoming,
+      onPress : () => {
+        navigate('/kyc-check'); // Navigate to KYC check page
+      }
     },
     {
       name: 'Start transaction',
       buttonText: 'Get started',
       icon: MoneyChange,
-      status: 'upcoming' // upcoming
+      status: 'upcoming', // upcoming
+      onPress : () => {
+        navigate('/start-transaction'); // Navigate to start transaction page
+      }
     }
   ];
 
@@ -117,8 +136,12 @@ const Dashboard: React.FC = () => {
           {/* Progress Cards */}
           <Box sx={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 3,
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(4, 1fr)'
+            },
+            gap: '2%',
             mb: 4
           }}>
             {progressSteps.map((step, index) => {
@@ -127,11 +150,11 @@ const Dashboard: React.FC = () => {
 
               return (
                 <Card key={step.name} sx={{
-                  px: 4,
-                  py: 2,
-                  minHeight: '140px',
-                  border: `2px solid ${colors.borderColor}`,
-                  borderRadius: '14px',
+                  px: '4%',
+                  py: '3%',
+                  minHeight: '8.75rem',
+                  border: `0.125rem solid ${colors.borderColor}`,
+                  borderRadius: '0.875rem',
                   boxShadow: 'none',
                   bgcolor: 'white',
                   transition: 'all 0.3s ease',
@@ -145,7 +168,7 @@ const Dashboard: React.FC = () => {
                       },
                       '50%': {
                         transform: 'scale(1.02)',
-                        boxShadow: `0 0 0 8px rgba(139, 92, 246, 0.1)`
+                        boxShadow: `0 0 0 0.5rem rgba(139, 92, 246, 0.1)`
                       },
                       '100%': {
                         transform: 'scale(1)',
@@ -154,7 +177,7 @@ const Dashboard: React.FC = () => {
                     }
                   }),
                   '&:hover': {
-                    transform: 'translateY(-2px)',
+                    transform: 'translateY(-0.125rem)',
                     borderColor: colors.borderColor,
                     opacity: 0.8,
                     // Pause animation on hover for current status
@@ -168,40 +191,40 @@ const Dashboard: React.FC = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'flex-start',
-                    mb: 2
+                    mb: '1rem'
                   }}>
                     <Box sx={{
-                      width: 48,
-                      height: 48,
+                      width: '2rem',
+                      height: '2rem',
                       borderRadius: '50%',
                       backgroundColor: colors.iconBg,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <IconComponent size="28" color={colors.iconColor} />
+                      <IconComponent size="1.25rem" color={colors.iconColor} />
                     </Box>
 
                     <Box sx={{
-                      width: 20,
-                      height: 20,
+                      width: '1rem',
+                      height: '1rem',
                       borderRadius: '50%',
-                      border: step.status === 'success' ? '2px solid #374151' : '2px solid #e5e7eb',
+                      border: step.status === 'success' ? `0.0625rem solid #374151` : `0.0625rem solid #e5e7eb`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
                       {step.status === 'success' && (
                         <Box sx={{
-                          width: 14,
-                          height: 14,
+                          width: '0.75rem',
+                          height: '0.75rem',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center'
                         }}>
                           <svg
-                            width="10"
-                            height="8"
+                            width="6"
+                            height="5"
                             viewBox="0 0 10 8"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
@@ -209,7 +232,7 @@ const Dashboard: React.FC = () => {
                             <path
                               d="M1 4L3.5 6.5L9 1.5"
                               stroke="#374151"
-                              strokeWidth="1.5"
+                              strokeWidth="1"
                               strokeLinecap="round"
                               strokeLinejoin="round"
                             />
@@ -220,19 +243,19 @@ const Dashboard: React.FC = () => {
                   </Box>
 
                   {/* Progress info */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: '0.75rem' }}>
                     <Box sx={{
-                      width: 24,
-                      height: 24,
+                      width: '1.25rem',
+                      height: '1.25rem',
                       borderRadius: '50%',
                       backgroundColor: colors.bgColor,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      mr: 2
+                      mr: '0.5rem'
                     }}>
                       <Typography sx={{
-                        fontSize: '0.75rem',
+                        fontSize: '0.625rem',
                         fontWeight: 600,
                         color: colors.textColor
                       }}>
@@ -242,7 +265,7 @@ const Dashboard: React.FC = () => {
                     <Typography variant="h6" sx={{
                       fontWeight: 600,
                       color: '#1f2937',
-                      fontSize: '0.875rem'
+                      fontSize: '0.75rem'
                     }}>
                       {step.name}
                     </Typography>
@@ -252,20 +275,25 @@ const Dashboard: React.FC = () => {
                   <Button
                     variant="contained"
                     fullWidth
+                    onClick={() => {
+                      if (step.onPress && step.status === 'current') {
+                        step.onPress();
+                      } 
+                    }}
                     startIcon={step.status === 'success' ? (
                       <Box sx={{
-                        width: 18,
-                        height: 18,
+                        width: '0.875rem',
+                        height: '0.875rem',
                         borderRadius: '50%',
-                        border: '1.5px solid white',
+                        border: '0.0625rem solid white',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundColor: 'transparent'
                       }}>
                         <svg
-                          width="10"
-                          height="8"
+                          width="6"
+                          height="5"
                           viewBox="0 0 10 8"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -273,7 +301,7 @@ const Dashboard: React.FC = () => {
                           <path
                             d="M1 4L3.5 6.5L9 1.5"
                             stroke="white"
-                            strokeWidth="1.5"
+                            strokeWidth="1"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                           />
@@ -281,12 +309,14 @@ const Dashboard: React.FC = () => {
                       </Box>
                     ) : null}
                     sx={{
-                      py: 0.5,
-                      borderRadius: '20px',
+                      py: '0.25rem',
+                      px: '0.75rem',
+                      borderRadius: '1rem',
                       backgroundColor: colors.buttonBgColor || colors.bgColor,
                       color: colors.buttonTextColor || colors.textColor,
                       textTransform: 'none',
                       fontWeight: 600,
+                      fontSize: '0.75rem',
                       boxShadow: 'none',
                       '&:hover': {
                         backgroundColor: colors.buttonBgColor || colors.bgColor,
@@ -337,540 +367,14 @@ const Dashboard: React.FC = () => {
               {/* Store Payments Tab Content */}
               <Fade in={selectedTab === 0} timeout={500}>
                 <Box sx={{ display: selectedTab === 0 ? 'block' : 'none' }}>
-                  <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 4
-                  }}>
-                    {/* First Row - In Store and Virtual Payment Terminals */}
-                    <Box sx={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-                      gap: 4
-                    }}>
-                      {/* In Store Payment Terminal Card */}
-                      <Card sx={{
-                        p: 4,
-                        borderRadius: '14px',
-                        bgcolor: 'white',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-2px)'
-                        }
-                      }}>
-                        <Typography variant="h5" sx={{
-                          fontWeight: 'bold',
-                          color: '#1f2937',
-                          mb: 2,
-                          fontSize: '1.5rem',
-                          textAlign: 'left'
-                        }}>
-                          In Store Payment Terminal
-                        </Typography>
-                        <Typography variant="body1" sx={{
-                          color: '#6b7280',
-                          fontSize: '1rem',
-                          mb: 3,
-                          lineHeight: 1.6,
-                          textAlign: 'left'
-                        }}>
-                          Download now from the App Store or Google Play and simplify your financial life.
-                        </Typography>
-                        <Box sx={{
-                          display : "flex",
-                          justifyContent : "flex-start"
-                        }}>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              backgroundColor: '#8b5cf6',
-                              color: 'white',
-                              borderRadius: '25px',
-                              py: 1,
-                              px: 3,
-                              textTransform: 'none',
-                              fontWeight: 600,
-                              boxShadow: 'none',
-                              '&:hover': {
-                                backgroundColor: '#7c3aed',
-                                boxShadow: 'none'
-                              }
-                            }}
-                          >
-                            Contact Sales
-                          </Button>
-
-                        </Box>
-
-
-                      </Card>
-
-                      {/* Virtual Payment Terminal Card */}
-                      <Card sx={{
-                        p: 4,
-                        borderRadius: '14px',
-                        bgcolor: 'white',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-2px)'
-                        }
-                      }}>
-                        <Typography variant="h5" sx={{
-                          fontWeight: 'bold',
-                          color: '#1f2937',
-                          mb: 2,
-                          fontSize: '1.5rem',
-                          textAlign: 'left'
-                        }}>
-                          Virtual Payment Terminal
-                        </Typography>
-                        <Typography variant="body1" sx={{
-                          color: '#6b7280',
-                          fontSize: '1rem',
-                          mb: 3,
-                          lineHeight: 1.6,
-                          textAlign: 'left'
-                        }}>
-                          Download now from the App Store or Google Play and simplify your financial life.
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-                          <Box
-                            component="img"
-                            src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                            alt="Get it on Google Play"
-                            sx={{
-                              height: 40,
-                              cursor: 'pointer',
-                              '&:hover': {
-                                opacity: 0.8
-                              }
-                            }}
-                          />
-                          <Box
-                            component="img"
-                            src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-                            alt="Download on App Store"
-                            sx={{
-                              height: 40,
-                              cursor: 'pointer',
-                              '&:hover': {
-                                opacity: 0.8
-                              }
-                            }}
-                          />
-                        </Box>
-                      </Card>
-                    </Box>
-
-                    {/* Store 1 - Odd Layout (Image + Text) */}
-                    <Card sx={{
-                      p: 4,
-                      borderRadius: '14px',
-                      bgcolor: 'white',
-                      transition: 'all 0.3s ease',
-                      width: '100%',
-                      '&:hover': {
-                        transform: 'translateY(-2px)'
-                      }
-                    }}>
-                      <Box sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 4,
-                        flexDirection: { xs: 'column', md: 'row' }
-                      }}>
-                        {/* Image */}
-                        <Box sx={{
-                          minWidth: { xs: '100%', md: '300px' },
-                          maxWidth: { xs: '100%', md: '300px' },
-                          height: '300px',
-                          borderRadius: '12px',
-                          overflow: 'hidden',
-                          bgcolor: '#f8fafc',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <Box
-                            component="img"
-                            src="/store1.png"
-                            alt="Oxpay Merchant App"
-                            sx={{
-                              maxWidth: '100%',
-                              maxHeight: '100%',
-                              width: 'auto',
-                              height: 'auto',
-                              objectFit: 'contain'
-                            }}
-                          />
-                        </Box>
-
-                        {/* Text Content */}
-                        <Box sx={{ flex: 1, textAlign: 'left' }}>
-                          <Typography variant="h5" sx={{
-                            fontWeight: 'bold',
-                            color: '#1f2937',
-                            mb: 2,
-                            fontSize: '1.5rem'
-                          }}>
-                            Oxpay Merchant App – Power in Your Pocket
-                          </Typography>
-                          <Typography variant="body1" sx={{
-                            color: '#6b7280',
-                            fontSize: '1rem',
-                            mb: 3,
-                            lineHeight: 1.6
-                          }}>
-                            All-in-one payments. Zero complications. From in-store terminals to your mobile device, the Oxpay app lets you:
-                            <Box component="ul" sx={{ listStyle: 'none', pl: 0, mt: 2, mb: 2 }}>
-                              {[
-                                'Accept payments',
-                                'Issue refunds',
-                                'Send receipts',
-                                'Create payment links',
-                                'Track every transaction in real-time'
-                              ].map((feature, index) => (
-                                <Box component="li" key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                  <Box sx={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: '50%',
-                                    border: '2px solid #10b981',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    mr: 2,
-                                    flexShrink: 0
-                                  }}>
-                                    <svg
-                                      width="10"
-                                      height="8"
-                                      viewBox="0 0 10 8"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M1 4L3.5 6.5L9 1.5"
-                                        stroke="#10b981"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  </Box>
-                                  <Typography sx={{ color: '#6b7280', fontSize: '1rem' }}>
-                                    {feature}
-                                  </Typography>
-                                </Box>
-                              ))}
-                            </Box>
-                            Everything you need to manage payments, now in your pocket. Download and transform your business today!
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              backgroundColor: '#8b5cf6',
-                              color: 'white',
-                              borderRadius: '25px',
-                              py: 1,
-                              px: 3,
-                              textTransform: 'none',
-                              fontWeight: 600,
-                              boxShadow: 'none',
-                              '&:hover': {
-                                backgroundColor: '#7c3aed',
-                                boxShadow: 'none'
-                              }
-                            }}
-                          >
-                            Download App
-                          </Button>
-                        </Box>
-                      </Box>
-                    </Card>
-
-                    {/* Store 2 - Even Layout (Text + Image) */}
-                    <Card sx={{
-                      p: 4,
-                      borderRadius: '14px',
-                      bgcolor: 'white',
-                      transition: 'all 0.3s ease',
-                      width: '100%',
-                      '&:hover': {
-                        transform: 'translateY(-2px)'
-                      }
-                    }}>
-                      <Box sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 4,
-                        flexDirection: { xs: 'column', md: 'row' }
-                      }}>
-                        {/* Text Content */}
-                        <Box sx={{ flex: 1, textAlign: 'left', order: { xs: 2, md: 1 } }}>
-                          <Typography variant="h5" sx={{
-                            fontWeight: 'bold',
-                            color: '#1f2937',
-                            mb: 2,
-                            fontSize: '1.5rem'
-                          }}>
-                            Create Payment Links
-                          </Typography>
-                          <Typography variant="body1" sx={{
-                            color: '#6b7280',
-                            fontSize: '1rem',
-                            mb: 3,
-                            lineHeight: 1.6
-                          }}>
-                            Send. Click. Paid. It's that simple. Generate secure payment URLs with just a few taps, no coding required.
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              backgroundColor: '#8b5cf6',
-                              color: 'white',
-                              borderRadius: '25px',
-                              py: 1,
-                              px: 3,
-                              textTransform: 'none',
-                              fontWeight: 600,
-                              boxShadow: 'none',
-                              '&:hover': {
-                                backgroundColor: '#7c3aed',
-                                boxShadow: 'none'
-                              }
-                            }}
-                          >
-                            Get Started
-                          </Button>
-                        </Box>
-
-                        {/* Image */}
-                        <Box sx={{
-                          minWidth: { xs: '100%', md: '300px' },
-                          maxWidth: { xs: '100%', md: '300px' },
-                          height: '300px',
-                          borderRadius: '12px',
-                          overflow: 'hidden',
-                          bgcolor: '#f8fafc',
-                          order: { xs: 1, md: 2 },
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <Box
-                            component="img"
-                            src="/store2.png"
-                            alt="Create Payment Links"
-                            sx={{
-                              maxWidth: '100%',
-                              maxHeight: '100%',
-                              width: 'auto',
-                              height: 'auto',
-                              objectFit: 'contain'
-                            }}
-                          />
-                        </Box>
-                      </Box>
-                    </Card>
-
-                    {/* Store 3 - Odd Layout (Image + Text) */}
-                    <Card sx={{
-                      p: 4,
-                      borderRadius: '14px',
-                      bgcolor: 'white',
-                      transition: 'all 0.3s ease',
-                      width: '100%',
-                      '&:hover': {
-                        transform: 'translateY(-2px)'
-                      }
-                    }}>
-                      <Box sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 4,
-                        flexDirection: { xs: 'column', md: 'row' }
-                      }}>
-                        {/* Image */}
-                        <Box sx={{
-                          minWidth: { xs: '100%', md: '300px' },
-                          maxWidth: { xs: '100%', md: '300px' },
-                          height: '300px',
-                          borderRadius: '12px',
-                          overflow: 'hidden',
-                          bgcolor: '#f8fafc',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <Box
-                            component="img"
-                            src="/store3.png"
-                            alt="Send Receipt via Email"
-                            sx={{
-                              maxWidth: '100%',
-                              maxHeight: '100%',
-                              width: 'auto',
-                              height: 'auto',
-                              objectFit: 'contain'
-                            }}
-                          />
-                        </Box>
-
-                        {/* Text Content */}
-                        <Box sx={{ flex: 1, textAlign: 'left' }}>
-                          <Typography variant="h5" sx={{
-                            fontWeight: 'bold',
-                            color: '#1f2937',
-                            mb: 2,
-                            fontSize: '1.5rem'
-                          }}>
-                            Send Receipt via Email
-                          </Typography>
-                          <Typography variant="body1" sx={{
-                            color: '#6b7280',
-                            fontSize: '1rem',
-                            mb: 3,
-                            lineHeight: 1.6
-                          }}>
-                            Go Green. Save on paper. Stay connected. Automatically email receipts to customers or internal teams in seconds. Add multiple recipients, CC support, and share receipts without wasting paper.
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              backgroundColor: '#8b5cf6',
-                              color: 'white',
-                              borderRadius: '25px',
-                              py: 1,
-                              px: 3,
-                              textTransform: 'none',
-                              fontWeight: 600,
-                              boxShadow: 'none',
-                              '&:hover': {
-                                backgroundColor: '#7c3aed',
-                                boxShadow: 'none'
-                              }
-                            }}
-                          >
-                            Learn More
-                          </Button>
-                        </Box>
-                      </Box>
-                    </Card>
-                  </Box>
+                  <StorePaymentsTab />
                 </Box>
               </Fade>
 
               {/* Web Integrations Tab Content */}
               <Fade in={selectedTab === 1} timeout={500}>
                 <Box sx={{ display: selectedTab === 1 ? 'block' : 'none' }}>
-                  <Box sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-                    gap: 4
-                  }}>
-                    {/* Payment Gateway API Card */}
-                    <Card sx={{
-                      p: 4,
-                      borderRadius: '14px',
-                      bgcolor: 'white',
-                      transition: 'all 0.3s ease',
-                      textAlign: 'left',
-                      '&:hover': {
-                        transform: 'translateY(-2px)'
-                      }
-                    }}>
-                      <Typography variant="h5" sx={{
-                        fontWeight: 'bold',
-                        color: '#1f2937',
-                        mb: 2,
-                        fontSize: '1.5rem',
-                        textAlign: 'left'
-                      }}>
-                        Payment Gateway API
-                      </Typography>
-                      <Typography variant="body1" sx={{
-                        color: '#6b7280',
-                        fontSize: '1rem',
-                        mb: 3,
-                        lineHeight: 1.6,
-                        textAlign: 'left'
-                      }}>
-                        Integrate secure payment processing directly into your website or application with our robust API.
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: '#8b5cf6',
-                          color: 'white',
-                          borderRadius: '25px',
-                          py: 1,
-                          px: 3,
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          boxShadow: 'none',
-                          alignSelf: 'flex-start',
-                          '&:hover': {
-                            backgroundColor: '#7c3aed',
-                            boxShadow: 'none'
-                          }
-                        }}
-                      >
-                        View Documentation
-                      </Button>
-                    </Card>
-
-                    {/* E-commerce Plugins Card */}
-                    <Card sx={{
-                      p: 4,
-                      borderRadius: '14px',
-                      bgcolor: 'white',
-                      transition: 'all 0.3s ease',
-                      textAlign: 'left',
-                      '&:hover': {
-                        transform: 'translateY(-2px)'
-                      }
-                    }}>
-                      <Typography variant="h5" sx={{
-                        fontWeight: 'bold',
-                        color: '#1f2937',
-                        mb: 2,
-                        fontSize: '1.5rem',
-                        textAlign: 'left'
-                      }}>
-                        E-commerce Plugins
-                      </Typography>
-                      <Typography variant="body1" sx={{
-                        color: '#6b7280',
-                        fontSize: '1rem',
-                        mb: 3,
-                        lineHeight: 1.6,
-                        textAlign: 'left'
-                      }}>
-                        Ready-to-use plugins for popular e-commerce platforms like Shopify, WooCommerce, and Magento.
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: '#8b5cf6',
-                          color: 'white',
-                          borderRadius: '25px',
-                          py: 1,
-                          px: 3,
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          boxShadow: 'none',
-                          alignSelf: 'flex-start',
-                          '&:hover': {
-                            backgroundColor: '#7c3aed',
-                            boxShadow: 'none'
-                          }
-                        }}
-                      >
-                        Browse Plugins
-                      </Button>
-                    </Card>
-                  </Box>
+                  <WebIntegrationsTab />
                 </Box>
               </Fade>
             </Box>
