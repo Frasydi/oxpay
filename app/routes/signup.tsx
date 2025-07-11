@@ -61,8 +61,8 @@ const SignUp = () => {
       console.log('Sign up successful:', response);
       
       // Navigate to verify email page with the user's email
-      navigate("/dashboard")
-    //  navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+      // navigate("/dashboard")
+     navigate(`/verify-email?email=${encodeURIComponent(email)}`);
       
     } catch (error: any) {
       setError(error.message || 'Sign up failed');
