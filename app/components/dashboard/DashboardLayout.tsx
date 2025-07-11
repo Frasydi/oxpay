@@ -16,7 +16,10 @@ import {
   Divider,
   Badge,
   Card,
-  CardContent
+  CardContent,
+  Drawer,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import {
   PlayCircle,
@@ -36,7 +39,9 @@ import {
   Profile,
   Clock,
   MessageQuestion as FAQ,
-  Logout
+  Logout,
+  HambergerMenu,
+  CloseSquare
 } from 'iconsax-react';
 import { useAuth } from '~/contexts/AuthContext';
 
@@ -62,7 +67,11 @@ interface NavItem {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth()
+  const { logout } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [mobileOpen, setMobileOpen] = useState(false);
+  
   const [selectedItem, setSelectedItem] = useState(() => {
     // Determine initial selected item based on current path
     const path = location.pathname;
@@ -147,12 +156,20 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   const handleItemClick = (path: string) => {
     setSelectedItem(path);
+    // Close mobile drawer when item is clicked
+    if (isMobile) {
+      setMobileOpen(false);
+    }
     // Navigate to the appropriate route
     if (path === 'getting-started') {
       navigate('/dashboard');
     } else {
       navigate(`/${path}`);
     }
+  };
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -242,68 +259,113 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     );
   };
 
+  // Sidebar content component
+  const SidebarContent = () => (
+    <Box sx={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      height: '100%',
+      overflow: 'hidden'
+    }}>
+      {/* Logo */}
+      <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box
+          component="img"
+          src="/OX PAY logo 1.png"
+          alt="OXPay Logo"
+          sx={{
+            width: 120,
+            height: 'auto'
+          }}
+        />
+        {isMobile && (
+          <IconButton 
+            onClick={handleDrawerToggle}
+            sx={{ ml: 1 }}
+          >
+            <CloseSquare size="24" color={colors.neutralDarker} />
+          </IconButton>
+        )}
+      </Box>
+
+      {/* Navigation */}
+      <Box sx={{ 
+        flex: 1, 
+        overflow: 'auto', 
+        py: 2,
+        // Hide scrollbar for webkit browsers
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+        // Hide scrollbar for Firefox
+        scrollbarWidth: 'none',
+        // Ensure content is still scrollable
+        msOverflowStyle: 'none',
+      }}>
+        {navGroups.map(group => (
+          <Box key={group.key} sx={{ mb: 3 }}>
+            <Typography
+              variant="overline"
+              sx={{
+                px: 3,
+                color: '#9ca3af',
+                fontWeight: 'bold',
+                fontSize: '0.75rem',
+                letterSpacing: '0.05em',
+                fontFamily: '"Open Sans", sans-serif'
+              }}
+            >
+              {group.title}
+            </Typography>
+            <List component="nav" sx={{ pt: 1 }}>
+              {group.items.map(item => renderNavItem(item))}
+            </List>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
-      {/* Sidebar */}
-      <Box
-        sx={{
-          width: 280,
-          backgroundColor: 'white',
-          borderRight: '1px solid #e5e7eb',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden'
-        }}
-      >
-        {/* Logo */}
-        <Box sx={{ p: 3 }}>
-          <Box
-            component="img"
-            src="/OX PAY logo 1.png"
-            alt="OXPay Logo"
-            sx={{
-              width: 120,
-              height: 'auto'
-            }}
-          />
-        </Box>
+      {/* Mobile Drawer */}
+      {isMobile && (
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: 280,
+              backgroundColor: 'white',
+              borderRight: '1px solid #e5e7eb'
+            },
+          }}
+        >
+          <SidebarContent />
+        </Drawer>
+      )}
 
-        {/* Navigation */}
-        <Box sx={{ 
-          flex: 1, 
-          overflow: 'auto', 
-          py: 2,
-          // Hide scrollbar for webkit browsers
-          '&::-webkit-scrollbar': {
-            display: 'none',
-          },
-          // Hide scrollbar for Firefox
-          scrollbarWidth: 'none',
-          // Ensure content is still scrollable
-          msOverflowStyle: 'none',
-        }}>
-          {navGroups.map(group => (
-            <Box key={group.key} sx={{ mb: 3 }}>
-              <Typography
-                variant="overline"
-                sx={{
-                  px: 3,
-                  color: '#9ca3af',
-                  fontWeight: 'bold',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.05em',
-                  fontFamily: '"Open Sans", sans-serif'
-                }}
-              >
-                {group.title}
-              </Typography>
-              <List component="nav" sx={{ pt: 1 }}>
-                {group.items.map(item => renderNavItem(item))}
-              </List>
-            </Box>
-          ))}
+      {/* Desktop Sidebar */}
+      {!isMobile && (
+        <Box
+          sx={{
+            width: 280,
+            backgroundColor: 'white',
+            borderRight: '1px solid #e5e7eb',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden'
+          }}
+        >
+          <SidebarContent />
         </Box>
-      </Box>
+      )}
 
       {/* Main Content */}
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -313,43 +375,63 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             position: 'absolute',
             top: 0,
             right: 0,
-            left: 280,
+            left: { xs: 0, md: 280 },
             height: 64,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            px: 3,
+            px: { xs: 2, sm: 3 },
             gap: 2,
-            zIndex: 1000
+            zIndex: 1000,
+            backgroundColor: 'white',
+            borderBottom: { xs: '1px solid #e5e7eb', md: 'none' }
           }}
         >
-          {/* Left side - Logo market with merchant name */}
+          {/* Left side - Mobile menu button and merchant info */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
             gap: 2
           }}>
-            <Shop 
-              size="20" 
-              color={colors.neutralDarker} 
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                color: colors.neutralDarker,
-                fontWeight: 500,
-                fontSize: '0.875rem'
-              }}
-            >
-              Merchant Name
-            </Typography>
-            <Box
-              sx={{
-                color: colors.neutralDarker,
-                fontSize: '12px'
-              }}
-            >
-              ▴
+            {/* Mobile menu button */}
+            {isMobile && (
+              <IconButton
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 1 }}
+              >
+                <HambergerMenu size="24" color={colors.neutralDarker} />
+              </IconButton>
+            )}
+            
+            {/* Merchant info - hide on small mobile screens */}
+            <Box sx={{
+              display: { xs: 'none', sm: 'flex' },
+              alignItems: 'center',
+              gap: 2
+            }}>
+              <Shop 
+                size="20" 
+                color={colors.neutralDarker} 
+              />
+              <Typography
+                variant="body1"
+                sx={{
+                  color: colors.neutralDarker,
+                  fontWeight: 500,
+                  fontSize: '0.875rem'
+                }}
+              >
+                Merchant Name
+              </Typography>
+              <Box
+                sx={{
+                  color: colors.neutralDarker,
+                  fontSize: '12px'
+                }}
+              >
+                ▴
+              </Box>
             </Box>
           </Box>
 
@@ -357,7 +439,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 2
+            gap: { xs: 1, sm: 2 }
           }}>
           {/* Notification */}
           <Badge badgeContent={3} color="error">
@@ -371,6 +453,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             >
               <IconButton
                 onClick={handleNotificationMenuOpen}
+                size={isMobile ? "small" : "medium"}
                 sx={{
                   color: '#000000',
                   '&:hover': {
@@ -378,20 +461,22 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                   }
                 }}
               >
-                <Notification size="20" color="#000000" />
+                <Notification size={isMobile ? "18" : "20"} color="#000000" />
               </IconButton>
             </Card>
           </Badge>
 
-          {/* Vertical divider */}
-          <Divider 
-            orientation="vertical" 
-            sx={{ 
-              mx: 1,
-              height: '30px',
-              alignSelf: 'center'
-            }} 
-          />
+          {/* Vertical divider - hide on small screens */}
+          {!isMobile && (
+            <Divider 
+              orientation="vertical" 
+              sx={{ 
+                mx: 1,
+                height: '30px',
+                alignSelf: 'center'
+              }} 
+            />
+          )}
 
           {/* User info and avatar */}
           <Box 
@@ -399,7 +484,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             sx={{ 
               display: 'flex', 
               alignItems: 'center', 
-              gap: 1.5,
+              gap: { xs: 1, sm: 1.5 },
               cursor: 'pointer',
               p: 1,
               borderRadius: '8px',
@@ -410,23 +495,25 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           >
             <Avatar
               sx={{
-                width: 32,
-                height: 32,
+                width: { xs: 28, sm: 32 },
+                height: { xs: 28, sm: 32 },
                 backgroundColor: '#F2E5FB',
                 border: `2px solid ${colors.electricVioletLight}`,
                 color: colors.electricViolet,
-                fontSize: '0.875rem',
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 fontWeight: 600
               }}
             >
               {user.firstName.charAt(0)}
             </Avatar>
             
+            {/* User name - hide on small mobile screens */}
             <Typography
               variant="body2"
               sx={{
                 color: colors.neutralDarker,
-                fontWeight: 500
+                fontWeight: 500,
+                display: { xs: 'none', sm: 'block' }
               }}
             >
               Hello, {user.firstName}
@@ -437,7 +524,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 p: 0.5,
                 color: colors.neutralDarker,
                 transform: Boolean(userMenuAnchor) ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.2s ease'
+                transition: 'transform 0.2s ease',
+                display: { xs: 'none', sm: 'block' }
               }}
             >
               <span style={{ fontSize: '14px' }}>▾</span>
@@ -480,7 +568,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         }}
         PaperProps={{
           sx: { 
-            width: 280,
+            width: { xs: 260, sm: 280 },
             p: 0,
             mt: 1,
             borderRadius: '12px',
@@ -625,7 +713,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         }}
         PaperProps={{
           sx: { 
-            width: 320, 
+            width: { xs: 300, sm: 320 }, 
             p: 1,
             mt: 1,
             backgroundColor: 'transparent',

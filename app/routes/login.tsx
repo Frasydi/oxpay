@@ -262,7 +262,8 @@ const Login = () => {
         <Typography variant="body2" sx={{ color: '#6b7280' }}>
           Don't have an Account?{' '}
           <Link 
-            href="/signup" 
+            component={RouterLink}
+            to="/signup"
             sx={{ 
               color: '#9333ea', 
               textDecoration: 'none',
