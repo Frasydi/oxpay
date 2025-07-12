@@ -70,6 +70,7 @@ class AuthService {
         password
       };
       this.users.push(newUser);
+      
       // Don't auto-login on signup, user needs to verify email first
       return {
         success: true,
@@ -188,7 +189,7 @@ class AuthService {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Simulate OTP verification (for demo purposes, accept any 4-digit code)
-    if (otpCode.length === 4 && /^\d{4}$/.test(otpCode)) {
+    if (otpCode.length === 6 && /^\d{6}$/.test(otpCode)) {
       // Find the user and log them in after successful verification
       const user = this.users.find((u: StoredUser) => u.email === email);
       if (user) {

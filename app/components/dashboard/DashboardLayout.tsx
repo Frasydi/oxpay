@@ -570,10 +570,18 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             )}
             
             {/* Merchant info - hide on small mobile screens */}
-            <Box sx={{
+            <Box onClick={() => {
+
+            }}  sx={{
               display: { xs: 'none', sm: 'flex' },
               alignItems: 'center',
-              gap: 2
+              gap: 2,
+              p : 2,
+              cursor :"pointer",
+              borderRadius : 2,
+              '&:hover': {
+                backgroundColor: colors.electricVioletLightest
+              }
             }}>
               <Shop 
                 size="20" 

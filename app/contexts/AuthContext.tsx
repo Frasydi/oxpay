@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router';
+import Layout from '~/components/Layout';
 import authService from '~/services/AuthService';
 
 interface User {
@@ -16,6 +17,7 @@ interface AuthContextType {
     socialLogin: (loginMethod: () => Promise<any>) => Promise<void>;
     logout: () => void;
     checkAuth: () => Promise<boolean>;
+    register: (email: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +34,13 @@ interface AuthProviderProps {
     children: ReactNode;
 }
 
+// Public routes that don't require authentication
+export const publicRoutes = ['/login', '/signup',  '/verify-email'];
+
+// Routes that require authentication
+export const protectedRoutes = ['/dashboard', '/activate-2fa', '/activate-mfa', '/otp-mfa'];
+
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -39,11 +48,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Public routes that don't require authentication
-    const publicRoutes = ['/login', '/signup'];
-
-    // Routes that require authentication
-    const protectedRoutes = ['/dashboard', '/verify-email', '/activate-2fa', '/activate-mfa', '/otp-mfa'];
 
     const checkAuth = async () => {
         try {
@@ -88,7 +92,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const login = async (email: string, password: string) => {
         try {
             const response = await authService.login(email, password);
-            
+
             if (response.success && response.user && response.token) {
                 setUser(response.user);
                 setIsAuthenticated(true);
@@ -114,6 +118,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const register = async (email: string, password: string) => {
+        const response = await authService.signUp(email, password);
+
+        if (response.success && response.user) {
+            setUser(response.user);
+            setIsAuthenticated(true);
+            // Redirect to verify email page after successful registration
+            navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+        } else {
+            throw new Error(response.message || 'Registration failed');
+        }
+
+    }
+
     const logout = () => {
         authService.logout();
         setUser(null);
@@ -125,10 +143,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     useEffect(() => {
         const performInitialCheck = async () => {
             const authStatus = await checkAuth();
-            
+
             // Only redirect on initial load, not on page changes
             const currentPath = location.pathname;
-            
+
             if (authStatus) {
                 // User is authenticated
                 if (publicRoutes.includes(currentPath)) {
@@ -143,13 +161,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (protectedRoutes.includes(currentPath)) {
                     // Redirect unauthenticated users to login
                     navigate('/login');
-                } else if( currentPath === '/') {
+                } else if (currentPath === '/') {
                     // Redirect unauthenticated users from home to login
                     navigate('/login');
                 }
             }
         };
-        
+
         performInitialCheck();
     }, []); // Only run once on mount
 
@@ -161,11 +179,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         socialLogin,
         logout,
         checkAuth,
+        register
     };
 
     return (
         <AuthContext.Provider value={value}>
-            {children}
+            <Layout pathname={location.pathname} >
+                {children}
+            </Layout>
         </AuthContext.Provider>
     );
 };

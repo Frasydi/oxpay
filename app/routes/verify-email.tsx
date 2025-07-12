@@ -22,7 +22,7 @@ interface VerifyEmailProps {
 const VerifyEmail: React.FC<VerifyEmailProps> = ({ email: propEmail }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState(propEmail || "user@example.com");
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
@@ -45,7 +45,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ email: propEmail }) => {
       setOtp(newOtp);
 
       // Auto-focus next input
-      if (value && index < 3) {
+      if (value && index < 5) {
         const nextInput = document.getElementById(`otp-${index + 1}`);
         nextInput?.focus();
       }
@@ -65,9 +65,9 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ email: propEmail }) => {
     setError('');
 
     const otpCode = otp.join('');
-    
-    if (otpCode.length !== 4) {
-      setError('Please enter the complete 4-digit code');
+
+    if (otpCode.length !== 6) {
+      setError('Please enter the complete 6-digit code');
       setLoading(false);
       return;
     }
@@ -102,169 +102,161 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ email: propEmail }) => {
   };
 
   return (
-    <AuthLayout>
-      {/* Header with back button and progress */}
-      <Box sx={{ mb: 4, display: 'flex', alignItems: 'stretch', gap: 2 }}>
-        {/* Back button card */}
-        <Card sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          p: 1, 
-          boxShadow: 'none',
-          border: '1px solid #e5e7eb',
-          borderRadius: "14px",
-          width: 'fit-content'
-        }}>
-          <IconButton 
-            onClick={handleGoBack}
-          >
-            <ArrowLeft2 size="20" color='black' variant="Linear" />
-          </IconButton>
-        </Card>
+    <Box sx={{
+      flex: 1,
+      // minHeight : "100vh"
+    }}>
 
-        {/* Progress card */}
-        <Card sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          p: 1, 
-          boxShadow: 'none',
-          border: '1px solid #e5e7eb',
-          borderRadius: "14px",
-          flex: 1
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-            <Sms color="#8b5cf6" variant="Bold" size="20" style={{ marginRight: '12px', marginLeft: '4px' }} />
-            <Box sx={{ 
-              height: '2px', 
-              backgroundColor: '#8b5cf6', 
-              flex: 1, 
-              mx: 2 
-            }} />
-            <Lock color="#d1d5db" variant="Bold" size="20" style={{ marginRight: '12px' }} />
-            <Typography variant="body2" sx={{ color: '#6b7280' }}>
-              2FA Activation
-            </Typography>
-          </Box>
-        </Card>
-      </Box>
+      <Box sx={{
+        flex: 1,
+        justifySelf: "center",
+        alignSelf: "center",
+        maxWidth: 500, width: '100%', py: 2
+      }}>
 
-      <Box sx={{ textAlign: 'left', mb: 4 }}>
-        <Typography variant="h4" sx={{ 
-          fontWeight: 'bold', 
-          mb: 1, 
-          color: '#1f2937',
-          fontFamily: '"IBM Plex Sans", sans-serif',
-          fontSize: '1.5rem'
-        }}>
-          Check your email
-        </Typography>
-        <Typography variant="body2" sx={{ color: '#6b7280' }}>
-          We sent a code to <strong>{email}</strong>
-        </Typography>
-      </Box>
+        {/* eader with back button and progress */}
+        <Box sx={{ mb: 4, display: 'flex', alignItems: 'stretch', gap: 2 }}>
+          {/* Back button card */}
+          <Card sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: 1,
+            boxShadow: 'none',
+            border: '1px solid #e5e7eb',
+            borderRadius: "14px",
+            width: 'fit-content'
+          }}>
+            <IconButton
+              onClick={handleGoBack}
+            >
+              <ArrowLeft2 size="20" color='black' variant="Linear" />
+            </IconButton>
+          </Card>
 
-      {/* Error Alert */}
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
 
-      {/* OTP Form */}
-      <Box component="form" onSubmit={handleVerify}>
-        <Stack spacing={3}>
-          {/* OTP Input */}
-          <Box>
-            <Typography variant="body2" sx={{ mb: 2, fontWeight: 500, color: '#374151', textAlign: 'center' }}>
-              Enter verification code
-            </Typography>
-            <Box sx={{ 
-              display: 'flex', 
-              gap: 2, 
-              justifyContent: 'center',
-              mb: 3
-            }}>
-              {otp.map((digit, index) => (
-                <TextField
-                  key={index}
-                  id={`otp-${index}`}
-                  value={digit}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(index, e)}
-                  variant="outlined"
-                  inputProps={{
-                    maxLength: 1,
-                    style: { 
-                      textAlign: 'center',
-                      fontSize: '1.25rem',
-                      fontWeight: 'bold'
-                    }
-                  }}
-                  sx={{
-                    width: '56px',
-                    height: '56px',
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '14px',
-                      height: '56px',
-                      '& input': {
-                        padding: 0
+        </Box>
+
+        <Box sx={{ textAlign: 'left', mb: 4 }}>
+          <Typography variant="h4" sx={{
+            fontWeight: 'bold',
+            mb: 1,
+            color: '#1f2937',
+            fontFamily: '"IBM Plex Sans", sans-serif',
+            fontSize: '2.2rem'
+          }}>
+            Check your email
+          </Typography>
+          <Typography variant="body2" sx={{ color: '#6b7280' }}>
+            We sent a code to <strong>{email}</strong>
+          </Typography>
+        </Box>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {/* OTP Form */}
+        <Box component="form" onSubmit={handleVerify}>
+          <Stack spacing={3}>
+            {/* OTP Input */}
+            <Box>
+              <Typography variant="body2" sx={{ mb: 2, fontWeight: 500, color: '#374151', textAlign: 'center' }}>
+                Enter verification code
+              </Typography>
+              <Box sx={{
+                display: 'flex',
+                gap: 2,
+                justifyContent: 'center',
+                mb: 3
+              }}>
+                {otp.map((digit, index) => (
+                  <TextField
+                    key={index}
+                    id={`otp-${index}`}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    variant="outlined"
+                    inputProps={{
+                      maxLength: 1,
+                      style: {
+                        textAlign: 'center',
+                        fontSize: '1.25rem',
+                        fontWeight: 'bold'
                       }
+                    }}
+                    sx={{
+                      width: '56px',
+                      height: '56px',
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: '14px',
+                        height: '56px',
+                        '& input': {
+                          padding: 0
+                        }
+                      }
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+
+            {/* Resend Code */}
+            <Box sx={{ textAlign: 'center', my: 10 }}>
+              <Typography variant="body2" sx={{ color: '#382F41' }}>
+                Didn't get a code?{' '}
+                <Link
+                  onClick={handleResendCode}
+                  sx={{
+                    color: '#9333ea',
+                    textDecoration: 'none',
+                    fontWeight: 'bold',
+                    cursor: resendLoading ? 'not-allowed' : 'pointer',
+                    opacity: resendLoading ? 0.6 : 1,
+                    '&:hover': {
+                      textDecoration: 'underline'
                     }
                   }}
-                />
-              ))}
+                >
+                  {resendLoading ? 'Sending...' : 'Resend Code'}
+                </Link>
+              </Typography>
             </Box>
-          </Box>
 
-          {/* Resend Code */}
-          <Box sx={{ textAlign: 'center', mb: 2 }}>
-            <Typography variant="body2" sx={{ color: '#6b7280' }}>
-              Didn't get a code?{' '}
-              <Link 
-                onClick={handleResendCode}
-                sx={{ 
-                  color: '#9333ea', 
-                  textDecoration: 'none',
-                  fontWeight: 'bold',
-                  cursor: resendLoading ? 'not-allowed' : 'pointer',
-                  opacity: resendLoading ? 0.6 : 1,
-                  '&:hover': {
-                    textDecoration: 'underline'
-                  }
-                }}
-              >
-                {resendLoading ? 'Sending...' : 'Resend Code'}
-              </Link>
-            </Typography>
-          </Box>
-          
-          {/* Verify Button */}
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            disabled={loading}
-            sx={{
-              py: 1,
-              borderRadius: '25px',
-              bgcolor: '#8b5cf6',
-              color: 'white',
-              fontWeight: 'bold',
-              textTransform: 'none',
-              '&:hover': {
-                bgcolor: '#7c3aed'
-              },
-              '&:disabled': {
-                bgcolor: '#e5e7eb'
-              }
-            }}
-          >
-            {loading ? <CircularProgress size={24} color="inherit" /> : 'Verify'}
-          </Button>
-        </Stack>
+            <Box sx={{ height: '1rem' }} />
+
+            {/* Verify Button */}
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              disabled={loading}
+              sx={{
+                py: 1,
+                mt : "5rem",
+                borderRadius: '25px',
+                bgcolor: '#8b5cf6',
+                color: 'white',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                '&:hover': {
+                  bgcolor: '#7c3aed'
+                },
+                '&:disabled': {
+                  bgcolor: '#e5e7eb'
+                }
+              }}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Next'}
+            </Button>
+          </Stack>
+        </Box>
       </Box>
-    </AuthLayout>
+    </Box>
   );
 };
 

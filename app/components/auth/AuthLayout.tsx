@@ -22,8 +22,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
       <Box sx={{ 
         flex: 1,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         bgcolor: '#FFFFFF',
         p: 4,
         overflow: 'auto',
@@ -35,9 +33,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         msOverflowStyle: 'none', // IE and Edge
         scrollbarWidth: 'none' // Firefox
       }}>
-        <Box sx={{ maxWidth: 500, width: '100%', py: 2 }}>
+        {/* <Box sx={{ maxWidth: 500, width: '100%', py: 2 }}> */}
           {children}
-        </Box>
+        {/* </Box> */}
       </Box>
       
       {/* Visual Branding Section - Right Side */}
