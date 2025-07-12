@@ -76,7 +76,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ email: propEmail }) => {
       const response = await authService.verifyEmail(email, otpCode);
       console.log('Email verification successful:', response);
       // Navigate to 2FA activation page after successful verification
-      navigate('/activate-2fa?email=' + encodeURIComponent(email));
+      navigate('/dashboard');
     } catch (error: any) {
       setError(error.message || 'Verification failed');
     } finally {
