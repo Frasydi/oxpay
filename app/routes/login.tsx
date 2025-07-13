@@ -131,7 +131,9 @@ const Login = () => {
             fontWeight: 600,
             '&:hover': {
               borderColor: '#DBDBE1',
-              bgcolor: '#f9fafb'
+              bgcolor: '#f9fafb',
+              boxShadow : ""
+              
             }
           }}
         >
@@ -159,7 +161,7 @@ const Login = () => {
             }
           }}
         >
-          Continue with SingPass
+          Continue with singpass
         </Button>
 
         <Button
@@ -183,7 +185,7 @@ const Login = () => {
             }
           }}
         >
-          Continue with CorPass
+          Continue with corpass
         </Button>
       </Stack>
 
@@ -275,7 +277,7 @@ const Login = () => {
             // component={RouterLink}
             // to="/login#"
             onClick={() => {
-              navigate('/signup');
+              navigate('/register');
             }}
             style={{
               color: '#9333ea',

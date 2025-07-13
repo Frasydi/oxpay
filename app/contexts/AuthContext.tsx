@@ -35,7 +35,7 @@ interface AuthProviderProps {
 }
 
 // Public routes that don't require authentication
-export const publicRoutes = ['/login', '/signup',  '/verify-email'];
+export const publicRoutes = ['/login', '/register',  '/verify-email', "/forgot-password"];
 
 // Routes that require authentication
 export const protectedRoutes = ['/dashboard', '/activate-2fa', '/activate-mfa', '/otp-mfa'];

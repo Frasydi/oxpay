@@ -35,9 +35,10 @@ const AuthButton: React.FC<AuthButtonProps> = ({
         color: 'white',
         fontWeight: 'bold',
         textTransform: 'none',
-        
+        boxShadow: 'none',
         '&:hover': {
-          bgcolor: hasInputs ? '#7c3aed' : '#B4B2B5'
+          bgcolor: hasInputs ? '#7c3aed' : '#B4B2B5',
+          boxShadow :"none"
         },
         '&:disabled': {
           bgcolor: '#e5e7eb'
